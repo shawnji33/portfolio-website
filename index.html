@@ -24,7 +24,7 @@
       --text-1: hsl(230,15%,8%);
       --text-2: hsl(230,8%,42%);
       --text-3: hsl(230,8%,62%);
-      --background: #F7FCFF;
+      --background: #EAECF0;
       --cell-background: hsla(0,0%,100%,0.55);
       --button-background: hsl(230,10%,86%);
       --gallery-button-background: hsl(230,18%,76%);
@@ -63,7 +63,7 @@
     [data-theme="dark"] ::selection { background: rgba(255,255,255,0.1); }
 
     /* ─── Base ───────────────────────────────────── */
-    html { height: 100%; background: #F7FCFF; }
+    html { height: 100%; background: #EAECF0; }
     [data-theme="dark"] html { background: hsl(240,15%,8%); }
     body {
       min-height: 100%;
@@ -140,7 +140,7 @@
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
-      background: #F7FCFF;
+      background: #EAECF0;
     }
     [data-theme="dark"] .mesh-bg { background: hsl(240,15%,8%); }
 
@@ -270,28 +270,42 @@
       width: 100%;
       background:
         url('noise.webp'),
-        linear-gradient(115deg, #639BEE 0%, #B2AAED 28%, #E3ACED 52%, #EEC8D9 72%, #B2AAED 86%, #639BEE 100%);
-      background-size: 180px 180px, 280% 100%;
+        linear-gradient(115deg,
+          #C0D1D8 0%,
+          #B8AAEE 18%,
+          #7B9EE8 35%,
+          #C8A8E8 50%,
+          #F0B0C8 64%,
+          #6B7288 80%,
+          #374151 100%);
+      background-size: 180px 180px, 320% 100%;
       background-blend-mode: overlay, normal;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: gradientSlide 6s linear infinite;
+      animation: gradientSlide 7s linear infinite;
     }
     @keyframes gradientSlide {
       0%   { background-position: 0 0, 100% 0; }
-      100% { background-position: 0 0, -80% 0; }
+      100% { background-position: 0 0, -100% 0; }
     }
     [data-theme="dark"] .header-display {
       background:
         url('noise.webp'),
-        linear-gradient(115deg, #639BEE 0%, #B2AAED 28%, #E3ACED 52%, #EEC8D9 72%, #B2AAED 86%, #639BEE 100%);
-      background-size: 180px 180px, 280% 100%;
+        linear-gradient(115deg,
+          #C0D1D8 0%,
+          #B8AAEE 18%,
+          #7B9EE8 35%,
+          #C8A8E8 50%,
+          #F0B0C8 64%,
+          #6B7288 80%,
+          #374151 100%);
+      background-size: 180px 180px, 320% 100%;
       background-blend-mode: overlay, normal;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: gradientSlide 6s linear infinite;
+      animation: gradientSlide 7s linear infinite;
     }
 
     /* ─── Intro ──────────────────────────────────── */
@@ -1002,85 +1016,91 @@
     window.addEventListener('resize', fitHeader);
   })();
 
-  // ── Dot-grid ripple background ────────────────────────
+  // ── Cell-grid ripple background ───────────────────────
   (function () {
     const canvas = document.getElementById('rippleCanvas');
     const ctx    = canvas.getContext('2d');
 
-    const GRID       = 36;    // px between dots
-    const DOT_R      = 1.4;   // dot radius px
-    const BASE_A     = 0.10;  // resting dot opacity
-    const PEAK_A     = 0.55;  // dot opacity at ripple peak
-    const RIPPLE_SPD = 260;   // px/s ripple travels
-    const BAND       = 70;    // px width of lit band
-    const DURATION   = 7000;  // ms until ripple fully fades
-    const MOUSE_INT  = 120;   // ms min between mouse-spawned ripples
+    const GRID      = 40;    // px between cell centers
+    const CELL      = 30;    // cell width/height (10px gap)
+    const CORNER    = 6;     // border-radius
+    const BASE_A    = 0.0;   // invisible at rest
+    const PEAK_A    = 0.20;  // opacity at ripple peak
+    const LINE_A    = 0.045; // faint grid line opacity
+    const SPD       = 280;   // px/s ripple speed
+    const BAND_IN   = 55;    // px — approach ramp
+    const BAND_OUT  = 110;   // px — fade-out tail
+    const DURATION  = 2200;  // ms ripple lives
+    const THROTTLE  = 80;    // ms between spawns
 
-    // Dot color (brand neutral)
-    const DOT_COLOR  = '99,120,180';
+    const CELL_R    = '90,100,120';
+    const LINE_R    = '90,100,120';
 
-    let W, H, cols, rows, dots = [];
+    let W, H, cells = [];
     let ripples = [];
-    let lastMouse = -MOUSE_INT;
+    let lastSpawn = -THROTTLE;
 
-    function resize() {
+    function buildGrid() {
       W = canvas.width  = window.innerWidth;
       H = canvas.height = window.innerHeight;
-      // Rebuild dot grid (offset so grid is centered)
-      cols = Math.ceil(W / GRID) + 2;
-      rows = Math.ceil(H / GRID) + 2;
-      const ox = ((W % GRID) / 2);
-      const oy = ((H % GRID) / 2);
-      dots = [];
-      for (let r = 0; r < rows; r++)
-        for (let c = 0; c < cols; c++)
-          dots.push({ x: ox + c * GRID, y: oy + r * GRID });
+      const ox = (W % GRID) / 2;
+      const oy = (H % GRID) / 2;
+      cells = [];
+      for (let r = 0; r * GRID <= H + GRID; r++)
+        for (let c = 0; c * GRID <= W + GRID; c++)
+          cells.push({ x: ox + c * GRID, y: oy + r * GRID });
     }
-    resize();
-    window.addEventListener('resize', resize);
+    buildGrid();
+    window.addEventListener('resize', buildGrid);
 
-    // Spawn ripple from a point
-    function spawn(x, y, t) {
-      ripples.push({ x, y, start: t });
-    }
+    function spawn(x, y, t) { ripples.push({ x, y, t }); }
 
-    // Mouse move spawns ripples (throttled)
     window.addEventListener('mousemove', e => {
       const now = performance.now();
-      if (now - lastMouse >= MOUSE_INT) {
+      if (now - lastSpawn >= THROTTLE) {
         spawn(e.clientX, e.clientY, now);
-        lastMouse = now;
+        lastSpawn = now;
       }
     });
 
-    function frame(t) {
-
-      // Expire old ripples
-      ripples = ripples.filter(r => t - r.start < DURATION);
-
+    function frame(now) {
+      ripples = ripples.filter(r => now - r.t < DURATION);
       ctx.clearRect(0, 0, W, H);
 
-      // Draw each dot
-      dots.forEach(d => {
-        let extra = 0;
+      // Faint grid lines
+      ctx.strokeStyle = `rgba(${LINE_R},${LINE_A})`;
+      ctx.lineWidth = 1;
+      const ox = (W % GRID) / 2, oy = (H % GRID) / 2;
+      for (let x = ox; x <= W; x += GRID) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = oy; y <= H; y += GRID) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+
+      // Cells
+      cells.forEach(c => {
+        let peak = 0;
         ripples.forEach(rp => {
-          const age  = t - rp.start;
-          const front = (age / 1000) * RIPPLE_SPD;       // leading edge radius
-          const dist  = Math.hypot(d.x - rp.x, d.y - rp.y);
-          const delta = dist - front;                     // negative = passed, positive = not yet
-          // Lit band: -BAND < delta < BAND*0.3
-          if (delta > -BAND && delta < BAND * 0.3) {
-            const norm  = delta > 0
-              ? 1 - delta / (BAND * 0.3)    // approaching
-              : 1 - (-delta) / BAND;        // receding
-            const fade  = 1 - age / DURATION;
-            extra = Math.max(extra, norm * fade * (PEAK_A - BASE_A));
+          const age  = now - rp.t;
+          const front = (age / 1000) * SPD;
+          const dist  = Math.hypot(c.x - rp.x, c.y - rp.y);
+          const delta = dist - front;
+          let v = 0;
+          if (delta >= -BAND_OUT && delta <= BAND_IN) {
+            v = delta > 0
+              ? (1 - delta / BAND_IN)            // approaching
+              : (1 - (-delta) / BAND_OUT);       // receding tail
+            v *= 1 - age / DURATION;             // overall fade
           }
+          if (v > peak) peak = v;
         });
-        const a = BASE_A + extra;
+        if (peak <= 0.005) return;
+        const a = peak * PEAK_A;
+        const hs = CELL / 2;
         ctx.beginPath();
-        ctx.arc(d.x, d.y, DOT_R, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${DOT_COLOR},${a.toFixed(3)})`;
+        ctx.roundRect(c.x - hs, c.y - hs, CELL, CELL, CORNER);
+        ctx.fillStyle = `rgba(${CELL_R},${a.toFixed(3)})`;
         ctx.fill();
       });
 
