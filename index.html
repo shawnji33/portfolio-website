@@ -1014,14 +1014,14 @@
     const RIPPLE_SPD = 260;   // px/s ripple travels
     const BAND       = 70;    // px width of lit band
     const DURATION   = 7000;  // ms until ripple fully fades
-    const AUTO_INT   = 3200;  // ms between auto ripples
+    const MOUSE_INT  = 120;   // ms min between mouse-spawned ripples
 
     // Dot color (brand neutral)
     const DOT_COLOR  = '99,120,180';
 
     let W, H, cols, rows, dots = [];
     let ripples = [];
-    let lastAuto = -AUTO_INT;
+    let lastMouse = -MOUSE_INT;
 
     function resize() {
       W = canvas.width  = window.innerWidth;
@@ -1044,17 +1044,16 @@
       ripples.push({ x, y, start: t });
     }
 
-    // Click spawns a ripple
-    window.addEventListener('click', e => {
-      spawn(e.clientX, e.clientY, performance.now());
+    // Mouse move spawns ripples (throttled)
+    window.addEventListener('mousemove', e => {
+      const now = performance.now();
+      if (now - lastMouse >= MOUSE_INT) {
+        spawn(e.clientX, e.clientY, now);
+        lastMouse = now;
+      }
     });
 
     function frame(t) {
-      // Auto-spawn from center
-      if (t - lastAuto >= AUTO_INT) {
-        spawn(W / 2, H * 0.35, t);
-        lastAuto = t;
-      }
 
       // Expire old ripples
       ripples = ripples.filter(r => t - r.start < DURATION);
