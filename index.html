@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shawn Ji — Product Designer</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <link rel="preconnect" href="https://api.fontshare.com" />
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -276,7 +277,7 @@
     .text-rotate-wrap {
       display: flex;
       align-items: center;
-      gap: 0.22em;
+      gap: 0.6em;
       flex-wrap: nowrap;
       white-space: nowrap;
     }
@@ -295,11 +296,12 @@
       align-items: center;
       justify-content: center;
       background: #374151;
-      border-radius: 0.12em;
-      padding: 0.04em 0.18em 0.08em;
+      border-radius: 0.38em;
+      padding: 0.096em 0.19em;
       position: relative;
       overflow: hidden;
       vertical-align: baseline;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     [data-theme="dark"] .rotate-badge { background: hsl(230,4%,88%); }
     .rotate-word {
@@ -311,19 +313,20 @@
       letter-spacing: -0.02em;
       white-space: nowrap;
       position: absolute;
-      opacity: 0;
-      transform: translateY(0.15em);
-      transition: opacity 0.32s ease, transform 0.32s ease;
     }
     [data-theme="dark"] .rotate-word { color: #374151; }
-    .rotate-word.active {
-      opacity: 1;
+    /* Per-character animation — JS sets transition-delay per char */
+    .rotate-word .char {
+      display: inline-block;
+      transform: translateY(1.15em);
+      transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .rotate-word.active .char {
       transform: translateY(0);
     }
-    .rotate-word.exit {
-      opacity: 0;
-      transform: translateY(-0.15em);
-      transition: opacity 0.25s ease, transform 0.25s ease;
+    .rotate-word.exit .char {
+      transform: translateY(1.15em);
+      transition: transform 0.2s cubic-bezier(0.55, 0, 0.8, 0.45);
     }
     .rotate-sizer {
       visibility: hidden;
@@ -342,7 +345,7 @@
     @media (max-width: 1200px) { #intro .cell { padding-right: 12px; } }
     .intro-text {
       grid-column-end: span 3;
-      font: 30px/1.5 var(--font-regular);
+      font: 30px/1.2 var(--font-regular);
       font-weight: 400;
       color: #6A708B;
       letter-spacing: -0.7px;
@@ -622,6 +625,26 @@
     /* ─── About ──────────────────────────────────── */
     #about .cell { padding: var(--padding-medium); }
 
+    /* ─── Video CTA ──────────────────────────────── */
+    #video-cta {
+      padding: var(--gap);
+      padding-bottom: 0;
+    }
+    .video-cta-card {
+      position: relative;
+      width: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      aspect-ratio: 16 / 7;
+      background: #0a0a0a;
+    }
+    .video-cta-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     /* ─── Footer ─────────────────────────────────── */
     footer {
       margin-top: 6px;
@@ -718,7 +741,7 @@
   <header>
     <div class="header-text">
       <div class="text-rotate-wrap" id="headerRotate">
-        <span class="header-static" id="headerDisplay">Shawn specializes in</span>
+        <span class="header-static" id="headerDisplay">Specializes in</span>
         <span class="rotate-badge" id="rotateBadge">
           <span class="rotate-sizer" id="rotateSizer">Building wealth</span>
           <span class="rotate-word active" data-idx="0">Product design</span>
@@ -765,37 +788,37 @@
       <div class="ticker-list">
         <div class="ticker-strip">
           <!-- 4 sets for seamless loop -->
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:24px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
           <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:24px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
           <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:24px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
           <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:24px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
           <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:20px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Projects ──────────────────────────────────────── -->
-  <div id="projects">
+  <!-- ── Projects (removed) ───────────────────────────── -->
+  <div id="projects" style="display:none">
 
     <!-- Project 1: Trading dashboard -->
     <section class="grid">
@@ -967,8 +990,8 @@
 
   </div><!-- /#projects -->
 
-  <!-- ── View More ─────────────────────────────────────── -->
-  <section class="grid" id="viewmore">
+  <!-- ── View More (removed) ───────────────────────────── -->
+  <section class="grid" id="viewmore" style="display:none">
     <a class="button span-all" href="https://read.cv/shawnji" target="_blank" rel="noopener noreferrer">
       <h2>View more on read.cv</h2>
       <span class="arrow"><svg viewBox="0 0 48 14" fill="none"><path d="M0 7H46M40 1.5L46 7L40 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -976,7 +999,7 @@
   </section>
 
   <!-- ── About ─────────────────────────────────────────── -->
-  <section class="grid" id="about">
+  <section class="grid" id="about" style="display:none">
     <div class="cell interval span-all">
       <h1>Shawn</h1>
       <h1><span>pronounced 'shawn'</span></h1>
@@ -991,6 +1014,13 @@
     </div>
     <div class="cell span-all">
       <h1>I consider myself incredibly lucky to have shipped products people actually use. I'd love to work on your hardest design problems.</h1>
+    </div>
+  </section>
+
+  <!-- ── Video CTA ───────────────────────────────────────── -->
+  <section id="video-cta">
+    <div class="video-cta-card">
+      <video src="kling-hero.mp4" autoplay muted loop playsinline></video>
     </div>
   </section>
 
@@ -1040,16 +1070,62 @@
   // ── Text rotate ───────────────────────────────────────
   (function () {
     const words    = document.querySelectorAll('.rotate-word');
+    const badge    = document.getElementById('rotateBadge');
+    const sizer    = document.getElementById('rotateSizer');
     const INTERVAL = 2600;
+    const STAGGER  = 22;   // ms between each character
     let current = 0;
+
+    // Split each word into individual character spans with stagger delays
+    words.forEach(word => {
+      const text = word.textContent.trim();
+      word.innerHTML = text.split('').map((ch, i) =>
+        `<span class="char" style="transition-delay:${i * STAGGER}ms">${ch === ' ' ? '&nbsp;' : ch}</span>`
+      ).join('');
+    });
+
+    function setExitDelays(word) {
+      // Exit: reverse stagger (last char leaves first for a natural sweep)
+      const chars = word.querySelectorAll('.char');
+      const n = chars.length;
+      chars.forEach((ch, i) => {
+        ch.style.transitionDelay = `${(n - 1 - i) * (STAGGER * 0.6)}ms`;
+      });
+    }
+
+    function setEnterDelays(word) {
+      word.querySelectorAll('.char').forEach((ch, i) => {
+        ch.style.transitionDelay = `${i * STAGGER}ms`;
+      });
+    }
+
+    function updateBadgeWidth(text) {
+      sizer.textContent = text;
+      const padPx = parseFloat(getComputedStyle(badge).paddingLeft) + parseFloat(getComputedStyle(badge).paddingRight);
+      badge.style.width = (sizer.offsetWidth + padPx) + 'px';
+    }
+
     function next() {
       const prev = current;
       current = (current + 1) % words.length;
+
+      // Exit current word (reverse stagger, slides down)
+      setExitDelays(words[prev]);
       words[prev].classList.remove('active');
       words[prev].classList.add('exit');
-      setTimeout(() => words[prev].classList.remove('exit'), 350);
-      words[current].classList.add('active');
+
+      // Wait for last exiting char to fully finish: max delay + transition duration + buffer
+      const nChars = words[prev].querySelectorAll('.char').length;
+      const exitWait = (nChars - 1) * STAGGER * 0.6 + 200 + 30;
+      setTimeout(() => {
+        words[prev].classList.remove('exit');
+        // Resize badge only after old word is gone, then enter new word
+        updateBadgeWidth(words[current].textContent.trim());
+        setEnterDelays(words[current]);
+        words[current].classList.add('active');
+      }, exitWait);
     }
+
     setInterval(next, INTERVAL);
   })();
 
@@ -1059,31 +1135,58 @@
     const staticEl = document.getElementById('headerDisplay');
     const sizer  = document.getElementById('rotateSizer');
 
+    function getBadgeWordWidth(text) {
+      sizer.textContent = text;
+      return sizer.offsetWidth;
+    }
+
+    function setBadgeWidth(text) {
+      const badge = document.getElementById('rotateBadge');
+      const padPx = parseFloat(getComputedStyle(badge).paddingLeft) + parseFloat(getComputedStyle(badge).paddingRight);
+      badge.style.width = (getBadgeWordWidth(text) + padPx) + 'px';
+    }
+
     function fitHeader() {
-      // Reset to base size first
+      const badge = document.getElementById('rotateBadge');
+
+      // Suppress transitions during resize
+      badge.style.transition = 'none';
+
+      // Reset font and clear badge fixed dimensions so scrollWidth measures cleanly
       staticEl.style.fontSize = '100px';
       document.querySelectorAll('.rotate-word').forEach(w => w.style.fontSize = '100px');
       sizer.style.fontSize = '100px';
+      badge.style.width  = '';
+      badge.style.height = '';
 
-      // Measure full row width at 100px
+      // Force layout before measuring
+      void wrap.offsetWidth;
+
+      // Scale to 80% of viewport width if < 1440px, else 100%
+      const targetW = window.innerWidth < 1440
+        ? window.innerWidth * 0.8
+        : window.innerWidth;
       const rowW = wrap.scrollWidth;
-      const scale = window.innerWidth / rowW;
+      const scale = targetW / rowW;
       const fs = (100 * scale) + 'px';
 
       staticEl.style.fontSize = fs;
       document.querySelectorAll('.rotate-word').forEach(w => w.style.fontSize = fs);
       sizer.style.fontSize = fs;
 
-      // Re-measure badge width for the sizer
-      const badge = document.getElementById('rotateBadge');
-      badge.style.minWidth = '';
-      let maxW = 0;
-      document.querySelectorAll('.rotate-word').forEach(w => {
-        sizer.textContent = w.textContent;
-        maxW = Math.max(maxW, sizer.offsetWidth);
-      });
-      sizer.textContent = document.querySelector('.rotate-word[data-idx="2"]').textContent;
-      badge.style.minWidth = maxW + 'px';
+      // Force layout again after font-size applied
+      void wrap.offsetWidth;
+
+      // Lock height from sizer at new font size
+      const padV = parseFloat(getComputedStyle(badge).paddingTop) + parseFloat(getComputedStyle(badge).paddingBottom);
+      sizer.textContent = 'Ag';
+      badge.style.height = (sizer.offsetHeight + padV) + 'px';
+
+      // Set width to current active word
+      const activeWord = document.querySelector('.rotate-word.active');
+      setBadgeWidth(activeWord ? activeWord.textContent.trim() : '');
+
+      requestAnimationFrame(() => { badge.style.transition = ''; });
     }
     fitHeader();
     window.addEventListener('resize', fitHeader);
@@ -1202,7 +1305,6 @@
       const vh       = window.innerHeight;
       const scrollY  = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - vh;
-      // When within 80px of page bottom, clear all blur
       const nearBottom = maxScroll - scrollY < 80;
 
       const clearPx = vh * CLEAR_ZONE;
