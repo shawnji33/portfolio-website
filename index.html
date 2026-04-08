@@ -687,6 +687,138 @@
 
     ::selection { background: rgba(0,0,0,0.08); }
 
+    /* ─── Glass side panel ───────────────────────── */
+    .glass-panel {
+      position: fixed;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      z-index: 9999;
+      width: 60px;
+      min-height: 140px;
+      border-radius: 0 20px 20px 0;
+      background: rgba(255,255,255,0.42);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-left: none;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+      overflow: hidden;
+      cursor: pointer;
+      transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      display: flex;
+      align-items: center;
+      color: #333;
+    }
+    .glass-panel.open { width: 260px; cursor: default; }
+    [data-theme="dark"] .glass-panel {
+      background: rgba(30,30,40,0.55);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    /* chevron tab */
+    .glass-tab {
+      position: absolute;
+      right: 0;
+      width: 60px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .glass-tab svg {
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      color: #555;
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .glass-tab svg { color: rgba(255,255,255,0.6); }
+    .glass-panel.open .glass-tab svg { transform: rotate(180deg); }
+
+    /* inner content */
+    .glass-content {
+      width: 260px;
+      padding: 28px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease 0s;
+      flex-shrink: 0;
+    }
+    .glass-panel.open .glass-content {
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.25s ease 0.2s;
+    }
+
+    /* avatar initials */
+    .glass-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c8b8e8, #b8d0f0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 700 22px/1 var(--font-display);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.6);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+    .glass-name {
+      font: 700 17px/1 var(--font-display);
+      color: #222;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+    .glass-title {
+      font: 400 12px/1 var(--font-mono);
+      color: #888;
+      margin: 2px 0 0;
+    }
+    [data-theme="dark"] .glass-name { color: rgba(255,255,255,0.9); }
+    [data-theme="dark"] .glass-title { color: rgba(255,255,255,0.45); }
+
+    .glass-divider {
+      width: 44px;
+      height: 1px;
+      background: rgba(0,0,0,0.1);
+      margin: 2px 0;
+    }
+    [data-theme="dark"] .glass-divider { background: rgba(255,255,255,0.12); }
+
+    .glass-socials {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .glass-social-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .glass-social-btn:hover { background: rgba(0,0,0,0.09); transform: scale(1.08); }
+    .glass-social-btn:active { transform: scale(0.93); }
+    [data-theme="dark"] .glass-social-btn { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    [data-theme="dark"] .glass-social-btn:hover { background: rgba(255,255,255,0.12); }
+
     /* ─── Cursor glow ────────────────────────────── */
     #cursorGlow {
       position: fixed;
@@ -1020,7 +1152,57 @@
 
 </div><!-- /.page -->
 
+<!-- Glass side panel -->
+<div class="glass-panel" id="glassPanel">
+  <div class="glass-tab">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 256 256" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="96 48 176 128 96 208"/>
+    </svg>
+  </div>
+  <div class="glass-content">
+    <div class="glass-avatar">SJ</div>
+    <div style="text-align:center">
+      <p class="glass-name">Shawn Ji</p>
+      <p class="glass-title">Product Designer</p>
+    </div>
+    <div class="glass-divider"></div>
+    <div class="glass-socials">
+      <!-- Email -->
+      <a class="glass-social-btn" href="mailto:hi@shawnji.co" title="Email">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 256 256" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><rect x="32" y="64" width="192" height="160" rx="8"/><polyline points="32,64 128,144 224,64"/></svg>
+      </a>
+      <!-- Twitter / X -->
+      <a class="glass-social-btn" href="https://twitter.com/shawnji" target="_blank" rel="noopener" title="Twitter">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.737-8.835L1.254 2.25H8.08l4.259 5.629 5.905-5.629Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a class="glass-social-btn" href="https://linkedin.com/in/shawnji" target="_blank" rel="noopener" title="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256"><rect x="36" y="36" width="184" height="184" rx="8" fill="none" stroke="currentColor" stroke-width="24"/><line x1="124" y1="120" x2="124" y2="176" stroke="currentColor" stroke-width="24" stroke-linecap="round"/><line x1="84" y1="120" x2="84" y2="176" stroke="currentColor" stroke-width="24" stroke-linecap="round"/><path d="M124,148a28,28,0,0,1,56,0v28" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round"/><circle cx="84" cy="80" r="16"/></svg>
+      </a>
+      <!-- read.cv -->
+      <a class="glass-social-btn" href="https://read.cv/shawnji" target="_blank" rel="noopener" title="read.cv">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 256 256" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"><path d="M64 40h128a8 8 0 0 1 8 8v160a8 8 0 0 1-8 8H64a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8z"/><line x1="88" y1="96" x2="168" y2="96"/><line x1="88" y1="128" x2="168" y2="128"/><line x1="88" y1="160" x2="136" y2="160"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ── Glass side panel ──────────────────────────────────
+  (function () {
+    const panel = document.getElementById('glassPanel');
+    let open = false;
+    panel.addEventListener('click', (e) => {
+      if (open && e.target.closest('.glass-social-btn')) return; // let links work
+      open = !open;
+      panel.classList.toggle('open', open);
+    });
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (open && !panel.contains(e.target)) { open = false; panel.classList.remove('open'); }
+    });
+  })();
+
   // ── Cursor glow ───────────────────────────────────────
   (function () {
     const glowEl = document.getElementById('cursorGlow');
