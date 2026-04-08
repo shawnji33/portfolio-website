@@ -1020,7 +1020,7 @@
       const rect = badge.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width  - 0.5;
       const y = (e.clientY - rect.top)  / rect.height - 0.5;
-      badge.style.transform = `perspective(200px) rotateY(${x * 20}deg) rotateX(${-y * 20}deg) scale(1.1)`;
+      badge.style.transform = `perspective(200px) rotateY(${x * 35}deg) rotateX(${-y * 35}deg) scale(1.15)`;
     });
     badge.addEventListener('mouseleave', () => {
       badge.style.transform = '';
