@@ -621,6 +621,21 @@
     }
 
     ::selection { background: rgba(0,0,0,0.08); }
+
+    /* ─── Cursor glow ────────────────────────────── */
+    #cursorGlow {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      background: radial-gradient(520px circle at var(--gx, -999px) var(--gy, -999px), rgba(255,255,255,0.13), transparent 65%);
+      will-change: background;
+    }
+    [data-theme="dark"] #cursorGlow {
+      background: radial-gradient(520px circle at var(--gx, -999px) var(--gy, -999px), rgba(255,255,255,0.07), transparent 65%);
+    }
   </style>
 </head>
 <body>
@@ -631,6 +646,9 @@
   <div class="mesh-noise"></div>
   <div class="mesh-fade-bottom"></div>
 </div>
+
+<!-- Cursor glow -->
+<div id="cursorGlow" aria-hidden="true"></div>
 
 <div class="page">
 
@@ -937,6 +955,35 @@
 </div><!-- /.page -->
 
 <script>
+  // ── Cursor glow ───────────────────────────────────────
+  (function () {
+    const el = document.getElementById('cursorGlow');
+    const root = document.documentElement;
+    let tx = -999, ty = -999;
+    let cx = -999, cy = -999;
+    let raf = null;
+    let visible = false;
+
+    function step() {
+      cx += (tx - cx) * 0.1;
+      cy += (ty - cy) * 0.1;
+      root.style.setProperty('--gx', cx + 'px');
+      root.style.setProperty('--gy', cy + 'px');
+      const dx = Math.abs(tx - cx), dy = Math.abs(ty - cy);
+      raf = (dx > 0.3 || dy > 0.3) ? requestAnimationFrame(step) : null;
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      tx = e.clientX; ty = e.clientY;
+      if (!visible) { el.style.opacity = '1'; visible = true; }
+      if (!raf) raf = requestAnimationFrame(step);
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+      el.style.opacity = '0'; visible = false;
+    });
+  })();
+
   // ── Header fill ───────────────────────────────────────
   function fitHeader() {
     const el = document.querySelector('.header-display');
