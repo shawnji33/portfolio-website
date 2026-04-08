@@ -989,7 +989,7 @@
     const container = document.querySelector('.header-text');
     function fitHeader() {
       el.style.fontSize = '100px';
-      const scale = container.offsetWidth / el.scrollWidth;
+      const scale = (container.offsetWidth * 0.8) / el.scrollWidth;
       el.style.fontSize = (100 * scale) + 'px';
     }
     fitHeader();
