@@ -174,8 +174,8 @@
       padding: var(--padding-small);
       margin-bottom: var(--gap);
       border: 1px solid rgba(0,0,0,0.06);
-      -webkit-backdrop-filter: saturate(180%) blur(30px);
-      backdrop-filter: saturate(180%) blur(30px);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
     }
 
     /* ─── Floating Nav ───────────────────────────── */
@@ -282,13 +282,29 @@
       white-space: nowrap;
     }
     .header-static {
-      font-size: 100px; /* resized by fitHeader JS */
+      font-size: 100px; /* desktop: overridden by fitHeader JS */
       line-height: 1;
       font-family: var(--font-display);
       font-weight: 800;
       letter-spacing: -0.02em;
       color: #374151;
       white-space: nowrap;
+    }
+    /* Fixed font sizes for non-desktop breakpoints */
+    @media (max-width: 1024px) {
+      .header-static,
+      .rotate-word,
+      .rotate-sizer { font-size: 64px !important; }
+    }
+    @media (max-width: 640px) {
+      .header-static,
+      .rotate-word,
+      .rotate-sizer { font-size: 40px !important; }
+      .text-rotate-wrap {
+        gap: 0.4em;
+        flex-wrap: wrap;
+        white-space: normal;
+      }
     }
     [data-theme="dark"] .header-static { color: hsl(230,4%,88%); }
     .rotate-badge {
@@ -345,7 +361,7 @@
     @media (max-width: 1200px) { #intro .cell { padding-right: 12px; } }
     .intro-text {
       grid-column-end: span 3;
-      font: 30px/1.2 var(--font-regular);
+      font: 30px/1.38 var(--font-regular);
       font-weight: 400;
       color: #6A708B;
       letter-spacing: -0.7px;
@@ -409,8 +425,8 @@
       border-radius: 16px;
       background: rgba(255,255,255,0.8);
       box-shadow: 0 2px 8px rgba(10,13,18,0.03), 0 0 0 1px rgba(10,13,18,0.03);
-      -webkit-backdrop-filter: saturate(180%) blur(30px);
-      backdrop-filter: saturate(180%) blur(30px);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
       white-space: nowrap;
       transition: background 0.25s var(--cubicOut), box-shadow 0.25s var(--cubicOut), transform 0.15s var(--cubicOut);
     }
@@ -685,6 +701,8 @@
       .project .buttons { flex-direction: column; grid-column: 1 / span 2; grid-row: 4; }
       .button-prev, .button-next { display: none; }
       #actions { flex-direction: column; }
+      .actions-ticker { flex: none; align-self: stretch; }
+      .actions-linkedin { padding-right: 20px; }
       .intro-text { grid-column-end: span 2; font-size: 24px; }
     }
 
@@ -1148,44 +1166,44 @@
 
     function fitHeader() {
       const badge = document.getElementById('rotateBadge');
-
-      // Suppress transitions during resize
       badge.style.transition = 'none';
 
-      // Reset font and clear badge fixed dimensions so scrollWidth measures cleanly
+      // On tablet/mobile, CSS handles font size — just update badge dimensions
+      if (window.innerWidth <= 1024) {
+        badge.style.width  = '';
+        badge.style.height = '';
+        void wrap.offsetWidth;
+        const padV = parseFloat(getComputedStyle(badge).paddingTop) + parseFloat(getComputedStyle(badge).paddingBottom);
+        sizer.textContent = 'Ag';
+        badge.style.height = (sizer.offsetHeight + padV) + 'px';
+        const activeWord = document.querySelector('.rotate-word.active');
+        setBadgeWidth(activeWord ? activeWord.textContent.trim() : '');
+        requestAnimationFrame(() => { badge.style.transition = ''; });
+        return;
+      }
+
+      // Desktop: scale to 80% of viewport width
       staticEl.style.fontSize = '100px';
       document.querySelectorAll('.rotate-word').forEach(w => w.style.fontSize = '100px');
       sizer.style.fontSize = '100px';
       badge.style.width  = '';
       badge.style.height = '';
-
-      // Force layout before measuring
       void wrap.offsetWidth;
 
-      // Scale to 80% of viewport width if < 1440px, else 100%
-      const targetW = window.innerWidth < 1440
-        ? window.innerWidth * 0.8
-        : window.innerWidth;
+      const targetW = window.innerWidth * 0.8;
       const rowW = wrap.scrollWidth;
-      const scale = targetW / rowW;
-      const fs = (100 * scale) + 'px';
+      const fs = (100 * (targetW / rowW)) + 'px';
 
       staticEl.style.fontSize = fs;
       document.querySelectorAll('.rotate-word').forEach(w => w.style.fontSize = fs);
       sizer.style.fontSize = fs;
-
-      // Force layout again after font-size applied
       void wrap.offsetWidth;
 
-      // Lock height from sizer at new font size
       const padV = parseFloat(getComputedStyle(badge).paddingTop) + parseFloat(getComputedStyle(badge).paddingBottom);
       sizer.textContent = 'Ag';
       badge.style.height = (sizer.offsetHeight + padV) + 'px';
-
-      // Set width to current active word
       const activeWord = document.querySelector('.rotate-word.active');
       setBadgeWidth(activeWord ? activeWord.textContent.trim() : '');
-
       requestAnimationFrame(() => { badge.style.transition = ''; });
     }
     fitHeader();
