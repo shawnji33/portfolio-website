@@ -357,6 +357,7 @@
       align-items: center;
       height: 100%;
       padding: var(--gap);
+      width: 100%;
     }
     .header-display {
       font-size: 100px;
@@ -369,6 +370,25 @@
       white-space: nowrap;
       display: block;
       width: 100%;
+    }
+
+    /* ─── Text mask hero ──────────────────────────────── */
+    .hero-mask-wrap {
+      position: relative;
+      width: 100%;
+      line-height: 1;
+    }
+    .hero-mask-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* SVG is invisible — only used as mask source */
+    .hero-mask-svg {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
     }
 
     /* ─── Intro ──────────────────────────────────── */
@@ -759,7 +779,26 @@
   <!-- ── Hero ─────────────────────────────────────────── -->
   <header>
     <div class="header-text">
-      <h1 class="header-display">DESIGN * BUILD * FINANCE.</h1>
+      <div class="hero-mask-wrap" id="heroMaskWrap">
+        <!-- Hidden SVG defines the text mask -->
+        <svg class="hero-mask-svg" aria-hidden="true">
+          <defs>
+            <mask id="hero-text-mask">
+              <rect width="100%" height="100%" fill="black"/>
+              <text id="heroMaskText"
+                x="0" y="80%"
+                fill="white"
+                font-family="'Cabinet Grotesk', system-ui, sans-serif"
+                font-weight="800"
+                letter-spacing="-0.02em"
+                font-size="100"
+              >DESIGN * BUILD * FINANCE.</text>
+            </mask>
+          </defs>
+        </svg>
+        <!-- Canvas renders the fluid gradient, clipped by the text mask -->
+        <canvas id="heroCanvas" class="hero-mask-canvas"></canvas>
+      </div>
     </div>
   </header>
 
@@ -1069,16 +1108,222 @@
     });
   })();
 
-  // ── Header fill ───────────────────────────────────────
-  function fitHeader() {
-    const el = document.querySelector('.header-display');
-    const container = document.querySelector('.header-text');
-    el.style.fontSize = '100px';
-    const scale = container.offsetWidth / el.scrollWidth;
-    el.style.fontSize = (100 * scale) + 'px';
-  }
-  fitHeader();
-  window.addEventListener('resize', fitHeader);
+  // ── Hero text-mask canvas ─────────────────────────────
+  (function() {
+    const wrap    = document.getElementById('heroMaskWrap');
+    const canvas  = document.getElementById('heroCanvas');
+    const maskTxt = document.getElementById('heroMaskText');
+    const gl      = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+    const TEXT = 'DESIGN * BUILD * FINANCE.';
+    const FONT = "'Cabinet Grotesk', system-ui, sans-serif";
+    const WEIGHT = '800';
+
+    // ── Fit canvas + mask text to container width ──────
+    function fitHero() {
+      const W = wrap.offsetWidth;
+      // Measure text at 100px to find scale
+      const tmp = document.createElement('canvas');
+      const ctx2 = tmp.getContext('2d');
+      ctx2.font = `${WEIGHT} 100px ${FONT}`;
+      const tw = ctx2.measureText(TEXT).width;
+      const scale = W / tw;
+      const fs = Math.round(100 * scale);
+      const H = Math.round(fs * 1.1); // slight vertical padding
+      canvas.width  = W;
+      canvas.height = H;
+      canvas.style.height = H + 'px';
+      wrap.style.height = H + 'px';
+      // Update SVG mask text size + position
+      maskTxt.setAttribute('font-size', fs);
+      maskTxt.setAttribute('y', Math.round(fs * 0.88));
+      // Update SVG viewport
+      const svg = document.querySelector('.hero-mask-svg');
+      svg.setAttribute('width', W);
+      svg.setAttribute('height', H);
+      const svgRect = svg.querySelector('rect');
+      svgRect.setAttribute('width', W);
+      svgRect.setAttribute('height', H);
+    }
+    fitHero();
+    window.addEventListener('resize', fitHero);
+
+    if (!gl) {
+      // Fallback: plain 2D canvas text
+      const ctx = canvas.getContext('2d');
+      function draw2d() {
+        fitHero();
+        const W = canvas.width, H = canvas.height;
+        const fs = parseInt(maskTxt.getAttribute('font-size'));
+        ctx.clearRect(0,0,W,H);
+        ctx.font = `${WEIGHT} ${fs}px ${FONT}`;
+        ctx.fillStyle = '#30313B';
+        ctx.fillText(TEXT, 0, fs * 0.88);
+      }
+      draw2d();
+      window.addEventListener('resize', draw2d);
+      return;
+    }
+
+    // ── WebGL fluid hologram shader ────────────────────
+    const VS = `
+      attribute vec2 a_pos;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = a_pos * 0.5 + 0.5;
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+      }
+    `;
+    // Curl-noise fluid using the site's brand palette — more saturated
+    const FS = `
+      precision mediump float;
+      varying vec2 v_uv;
+      uniform float u_t;
+      uniform vec2  u_res;
+
+      // Smooth noise helpers
+      vec2 hash2(vec2 p) {
+        p = vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)));
+        return -1.0 + 2.0 * fract(sin(p) * 43758.5453);
+      }
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f*f*(3.0-2.0*f);
+        return mix(mix(dot(hash2(i+vec2(0,0)),f-vec2(0,0)),
+                       dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
+                   mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),
+                       dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);
+      }
+      float fbm(vec2 p) {
+        float v=0.0, a=0.5;
+        for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.1+vec2(1.7,9.2);a*=0.5;}
+        return v;
+      }
+
+      // Brand colors — more saturated version of the background palette
+      vec3 col_blue  = vec3(0.35, 0.56, 0.94);  // #639BEE boosted
+      vec3 col_perp  = vec3(0.55, 0.50, 0.92);  // #B2AAED boosted
+      vec3 col_lilac = vec3(0.78, 0.52, 0.88);  // #E3ACED boosted
+      vec3 col_pink  = vec3(0.95, 0.60, 0.72);  // #EEC8D9 boosted
+
+      void main() {
+        vec2 uv = v_uv;
+        float t = u_t * 0.45;
+
+        // Distortion layers
+        float q1 = fbm(uv * 2.8 + t * 0.6);
+        float q2 = fbm(uv * 2.8 + vec2(q1*1.4, q1*0.9) + t * 0.4);
+        float q3 = fbm(uv * 3.2 + vec2(q2*1.2, q1*1.1) - t * 0.3);
+
+        float f = fbm(uv * 2.5 + vec2(q2 + q3 * 0.8));
+
+        // Map to palette
+        vec3 c;
+        float band = fract(f * 2.0 + t * 0.15);
+        if      (band < 0.25) c = mix(col_blue,  col_perp,  band * 4.0);
+        else if (band < 0.50) c = mix(col_perp,  col_lilac, (band-0.25)*4.0);
+        else if (band < 0.75) c = mix(col_lilac, col_pink,  (band-0.50)*4.0);
+        else                  c = mix(col_pink,  col_blue,  (band-0.75)*4.0);
+
+        // Brightness variation
+        float bright = 0.72 + 0.28 * sin(f * 6.28 + t * 0.8);
+        c *= bright;
+
+        gl_FragColor = vec4(c, 1.0);
+      }
+    `;
+
+    function compile(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+    const prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const quad = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    const uT   = gl.getUniformLocation(prog, 'u_t');
+    const uRes = gl.getUniformLocation(prog, 'u_res');
+
+    // Offscreen canvas for composite (WebGL → 2D canvas with mask)
+    const off = document.createElement('canvas');
+    const ctx = off.getContext('2d');
+
+    function frame(ts) {
+      const W = canvas.width, H = canvas.height;
+      off.width = W; off.height = H;
+
+      // 1. Render WebGL fluid to offscreen
+      gl.viewport(0, 0, W, H);
+      gl.uniform1f(uT, ts * 0.001);
+      gl.uniform2f(uRes, W, H);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+      // 2. Composite: draw WebGL pixels, then mask with text
+      const pixels = new Uint8Array(W * H * 4);
+      gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      // Flip Y (WebGL origin is bottom-left)
+      const imgData = ctx.createImageData(W, H);
+      for (let y = 0; y < H; y++) {
+        const srcRow = (H - 1 - y) * W * 4;
+        imgData.data.set(pixels.subarray(srcRow, srcRow + W * 4), y * W * 4);
+      }
+
+      const finalCtx = canvas.getContext('2d') || (() => {
+        const c2 = document.createElement('canvas');
+        c2.width = W; c2.height = H;
+        return c2.getContext('2d');
+      })();
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // 3. Draw onto main canvas using SVG text mask
+      const maskId  = 'hero-text-mask';
+      const maskUrl = `url(#${maskId})`;
+      const mainCtx = canvas.getContext('2d');
+      mainCtx.clearRect(0, 0, W, H);
+      mainCtx.save();
+      (mainCtx).filter = 'none'; // reset
+      // Apply SVG mask via CSS filter trick isn't reliable cross-browser
+      // Instead: draw text as clip path directly on 2D canvas
+      const fs = parseInt(maskTxt.getAttribute('font-size'));
+      const ty = parseInt(maskTxt.getAttribute('y'));
+      mainCtx.font = `${WEIGHT} ${fs}px ${FONT}`;
+      mainCtx.textBaseline = 'alphabetic';
+      mainCtx.globalCompositeOperation = 'source-over';
+      // Draw fluid as source, then cut with text
+      const tmp2 = document.createElement('canvas');
+      tmp2.width = W; tmp2.height = H;
+      const tc = tmp2.getContext('2d');
+      // Mask: draw text white on black, composite fluid inside
+      tc.fillStyle = 'rgba(0,0,0,0)';
+      tc.clearRect(0, 0, W, H);
+      tc.font = `${WEIGHT} ${fs}px ${FONT}`;
+      tc.textBaseline = 'alphabetic';
+      tc.fillStyle = '#fff';
+      tc.fillText(TEXT, 0, ty);
+      tc.globalCompositeOperation = 'source-in';
+      tc.drawImage(off, 0, 0);
+
+      mainCtx.clearRect(0, 0, W, H);
+      mainCtx.drawImage(tmp2, 0, 0);
+      mainCtx.restore();
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
 
   // ── Theme toggle ──────────────────────────────────────
   const html = document.documentElement;
