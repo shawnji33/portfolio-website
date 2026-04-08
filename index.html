@@ -144,113 +144,13 @@
     }
     [data-theme="dark"] .mesh-bg { background: hsl(240,15%,8%); }
 
-    /* Blur lives on the static wrapper — never recalculates during animation */
-    .mesh-gradient-wrap {
+    /* ─── Ripple canvas background ───────────────── */
+    #rippleCanvas {
       position: absolute;
       inset: 0;
-      filter: blur(52px);
-      overflow: hidden;
+      width: 100%;
+      height: 100%;
     }
-    .mesh-gradient {
-      position: absolute;
-      inset: -20%;
-      width: 140%;
-      height: 140%;
-      background:
-        radial-gradient(circle at 10% 12%, #a8c8f5 0%, transparent 45%),
-        radial-gradient(circle at 55% 42%, #d2cef5 0%, transparent 48%),
-        radial-gradient(circle at 8%  82%, #edd8f5 0%, transparent 48%),
-        radial-gradient(circle at 85% 80%, #f5dde9 0%, transparent 45%),
-        radial-gradient(circle at 42% 95%, #f5dde9 0%, transparent 40%),
-        #c8ddf8;
-      will-change: transform;
-      transform: translate3d(0,0,0);
-      animation: gradientDrift 7s ease-in-out infinite alternate;
-    }
-    @keyframes gradientDrift {
-      0%   { transform: scale(1)    translate(0%,    0%); }
-      25%  { transform: scale(1.08) translate(8%,  -6%); }
-      50%  { transform: scale(0.94) translate(-7%,  9%); }
-      75%  { transform: scale(1.06) translate(10%,  4%); }
-      100% { transform: scale(1.02) translate(-5%, -8%); }
-    }
-    [data-theme="dark"] .mesh-gradient {
-      background:
-        radial-gradient(circle at 10% 12%, rgba(99,155,238,0.5)  0%, transparent 45%),
-        radial-gradient(circle at 55% 42%, rgba(178,170,237,0.45) 0%, transparent 48%),
-        radial-gradient(circle at 8%  82%, rgba(227,172,237,0.45) 0%, transparent 48%),
-        radial-gradient(circle at 85% 80%, rgba(238,200,217,0.4) 0%, transparent 45%),
-        hsl(240,15%,8%);
-    }
-
-    /* Light beam — two beams at offset angles for S-curve effect */
-    .light-beam-wrap {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      filter: blur(32px);
-      pointer-events: none;
-    }
-    .light-beam {
-      position: absolute;
-      width: 32%;
-      height: 240%;
-      top: -70%;
-      left: 22%;
-      background: linear-gradient(112deg, transparent 20%, rgba(255,255,255,0.62) 50%, transparent 80%);
-      transform: rotate(-15deg) translate3d(0,0,0);
-      will-change: transform;
-      animation: beam 13s ease-in-out infinite alternate;
-    }
-    .light-beam-2 {
-      position: absolute;
-      width: 24%;
-      height: 200%;
-      top: -20%;
-      left: 52%;
-      background: linear-gradient(95deg, transparent 20%, rgba(255,255,255,0.45) 50%, transparent 80%);
-      transform: rotate(8deg) translate3d(0,0,0);
-      will-change: transform;
-      animation: beam2 16s ease-in-out infinite alternate;
-    }
-    @keyframes beam {
-      0%   { opacity: 0.4;  transform: rotate(-15deg) translateX(-18%); }
-      50%  { opacity: 1.0; }
-      100% { opacity: 0.4;  transform: rotate(-15deg) translateX(20%); }
-    }
-    @keyframes beam2 {
-      0%   { opacity: 0.3;  transform: rotate(8deg) translateX(12%); }
-      50%  { opacity: 0.75; }
-      100% { opacity: 0.3;  transform: rotate(8deg) translateX(-14%); }
-    }
-    [data-theme="dark"] .light-beam {
-      background: linear-gradient(112deg, transparent 20%, rgba(255,255,255,0.06) 50%, transparent 80%);
-    }
-    [data-theme="dark"] .light-beam-2 {
-      background: linear-gradient(95deg, transparent 20%, rgba(255,255,255,0.04) 50%, transparent 80%);
-    }
-    [data-theme="dark"] .mesh-gradient {
-      background:
-        radial-gradient(circle at 12% 5%,  rgba(80,110,180,0.6)  0%, transparent 50%),
-        radial-gradient(circle at 82% 8%,  rgba(140,80,130,0.55) 0%, transparent 55%),
-        radial-gradient(circle at 4%  88%, rgba(100,70,160,0.55) 0%, transparent 58%),
-        radial-gradient(circle at 92% 82%, rgba(70,100,170,0.55) 0%, transparent 52%),
-        hsl(240,15%,8%);
-    }
-
-    .mesh-noise {
-      position: absolute;
-      inset: 0;
-      background-image: url('noise.webp');
-      background-size: cover;
-      opacity: 0.025;
-    }
-    .mesh-fade-bottom {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, #ede8f8 0%, transparent 30%);
-    }
-    [data-theme="dark"] .mesh-fade-bottom { background: linear-gradient(to top, hsl(240,15%,8%) 0%, transparent 30%); }
 
     /* ─── Layout wrapper ─────────────────────────── */
     .page { position: relative; z-index: 1; }
@@ -365,30 +265,27 @@
       font-family: var(--font-display);
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--text-1);
-      opacity: 0.85;
       white-space: nowrap;
       display: block;
       width: 100%;
+      background: linear-gradient(115deg, #639BEE 0%, #B2AAED 28%, #E3ACED 52%, #EEC8D9 72%, #B2AAED 86%, #639BEE 100%);
+      background-size: 280% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientSlide 6s linear infinite;
     }
-
-    /* ─── Text mask hero ──────────────────────────────── */
-    .hero-mask-wrap {
-      position: relative;
-      width: 100%;
-      line-height: 1;
+    @keyframes gradientSlide {
+      0%   { background-position: 100% 0; }
+      100% { background-position: -80% 0; }
     }
-    .hero-mask-canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    /* SVG is invisible — only used as mask source */
-    .hero-mask-svg {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
+    [data-theme="dark"] .header-display {
+      background: linear-gradient(115deg, #639BEE 0%, #B2AAED 28%, #E3ACED 52%, #EEC8D9 72%, #B2AAED 86%, #639BEE 100%);
+      background-size: 280% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientSlide 6s linear infinite;
     }
 
     /* ─── Intro ──────────────────────────────────── */
@@ -745,12 +642,9 @@
 </head>
 <body>
 
-<!-- Mesh background -->
+<!-- Ripple background -->
 <div class="mesh-bg" aria-hidden="true">
-  <div class="mesh-gradient-wrap"><div class="mesh-gradient"></div></div>
-  <div class="light-beam-wrap"><div class="light-beam"></div><div class="light-beam-2"></div></div>
-  <div class="mesh-noise"></div>
-  <div class="mesh-fade-bottom"></div>
+  <canvas id="rippleCanvas"></canvas>
 </div>
 
 <!-- Cursor glow -->
@@ -779,26 +673,7 @@
   <!-- ── Hero ─────────────────────────────────────────── -->
   <header>
     <div class="header-text">
-      <div class="hero-mask-wrap" id="heroMaskWrap">
-        <!-- Hidden SVG defines the text mask -->
-        <svg class="hero-mask-svg" aria-hidden="true">
-          <defs>
-            <mask id="hero-text-mask">
-              <rect width="100%" height="100%" fill="black"/>
-              <text id="heroMaskText"
-                x="0" y="80%"
-                fill="white"
-                font-family="'Cabinet Grotesk', system-ui, sans-serif"
-                font-weight="800"
-                letter-spacing="-0.02em"
-                font-size="100"
-              >DESIGN * BUILD * FINANCE.</text>
-            </mask>
-          </defs>
-        </svg>
-        <!-- Canvas renders the fluid gradient, clipped by the text mask -->
-        <canvas id="heroCanvas" class="hero-mask-canvas"></canvas>
-      </div>
+      <h1 class="header-display" id="headerDisplay">DESIGN * BUILD * FINANCE.</h1>
     </div>
   </header>
 
@@ -1108,132 +983,70 @@
     });
   })();
 
-  // ── Hero text-mask canvas ─────────────────────────────
-  (function() {
-    const wrap   = document.getElementById('heroMaskWrap');
-    const canvas = document.getElementById('heroCanvas'); // 2D display canvas
+  // ── Header fill ───────────────────────────────────────
+  (function () {
+    const el        = document.getElementById('headerDisplay');
+    const container = document.querySelector('.header-text');
+    function fitHeader() {
+      el.style.fontSize = '100px';
+      const scale = container.offsetWidth / el.scrollWidth;
+      el.style.fontSize = (100 * scale) + 'px';
+    }
+    fitHeader();
+    window.addEventListener('resize', fitHeader);
+  })();
+
+  // ── Ripple background canvas ──────────────────────────
+  (function () {
+    const canvas = document.getElementById('rippleCanvas');
     const ctx    = canvas.getContext('2d');
+    const COLORS = [
+      [99, 155, 238],   // #639BEE
+      [178, 170, 237],  // #B2AAED
+      [227, 172, 237],  // #E3ACED
+      [238, 200, 217],  // #EEC8D9
+    ];
+    const DURATION    = 6000;  // ms each ring takes to fully expand
+    const INTERVAL    = 1400;  // ms between spawns
+    const MAX_OPACITY = 0.22;  // peak ring opacity
+    const LINE_WIDTH  = 1.2;
 
-    const TEXT   = 'DESIGN * BUILD * FINANCE.';
-    const FONT   = "'Cabinet Grotesk', system-ui, sans-serif";
-    const WEIGHT = '800';
+    let rings = [];
+    let lastSpawn = -INTERVAL;
 
-    // Hidden WebGL canvas — separate from the 2D display canvas
-    const glCanvas = document.createElement('canvas');
-    const gl = glCanvas.getContext('webgl', { preserveDrawingBuffer: true }) || glCanvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
-
-    // ── Sizing ────────────────────────────────────────
-    let fontSize = 100, canvasH = 110;
-    function fitHero() {
-      const W = wrap.offsetWidth;
-      const tmp = document.createElement('canvas');
-      const mx  = tmp.getContext('2d');
-      mx.font = `${WEIGHT} 100px ${FONT}`;
-      const tw = mx.measureText(TEXT).width;
-      fontSize = Math.floor(100 * (W / tw));
-      canvasH  = Math.ceil(fontSize * 1.15);
-      canvas.width  = glCanvas.width  = W;
-      canvas.height = glCanvas.height = canvasH;
-      canvas.style.height = canvasH + 'px';
-      wrap.style.height   = canvasH + 'px';
-      if (gl) gl.viewport(0, 0, W, canvasH);
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-    fitHero();
-    window.addEventListener('resize', () => { fitHero(); });
+    resize();
+    window.addEventListener('resize', resize);
 
-    // ── Fallback — no WebGL ────────────────────────────
-    if (!gl) {
-      function drawFallback() {
-        const W = canvas.width, H = canvas.height;
-        ctx.clearRect(0, 0, W, H);
-        ctx.font = `${WEIGHT} ${fontSize}px ${FONT}`;
-        ctx.textBaseline = 'alphabetic';
-        ctx.fillStyle = '#30313B';
-        ctx.fillText(TEXT, 0, fontSize * 0.9);
-      }
-      drawFallback();
-      window.addEventListener('resize', drawFallback);
-      return;
-    }
-
-    // ── WebGL fluid shader ─────────────────────────────
-    const VS = `
-      attribute vec2 a_pos;
-      varying   vec2 v_uv;
-      void main(){
-        v_uv = a_pos*0.5+0.5;
-        gl_Position = vec4(a_pos,0,1);
-      }`;
-    const FS = `
-      precision mediump float;
-      varying vec2  v_uv;
-      uniform float u_t;
-      vec2 hash2(vec2 p){
-        p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));
-        return -1.0+2.0*fract(sin(p)*43758.5453);
-      }
-      float noise(vec2 p){
-        vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f);
-        return mix(mix(dot(hash2(i),f),dot(hash2(i+vec2(1,0)),f-vec2(1,0)),u.x),
-                   mix(dot(hash2(i+vec2(0,1)),f-vec2(0,1)),dot(hash2(i+vec2(1,1)),f-vec2(1,1)),u.x),u.y);
-      }
-      float fbm(vec2 p){float v=0.,a=0.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.1+vec2(1.7,9.2);a*=0.5;}return v;}
-      void main(){
-        vec2 uv=v_uv;
-        float t=u_t*0.35;
-        float q1=fbm(uv*3.0+t*0.5);
-        float q2=fbm(uv*3.0+vec2(q1*1.5,q1)+t*0.35);
-        float f =fbm(uv*2.8+vec2(q1+q2,q2*0.9)-t*0.25);
-        // Exact brand colors
-        vec3 blue  =vec3(0.388,0.608,0.933); // #639BEE
-        vec3 violet=vec3(0.698,0.667,0.929); // #B2AAED
-        vec3 lilac =vec3(0.890,0.675,0.929); // #E3ACED
-        vec3 pink  =vec3(0.933,0.784,0.851); // #EEC8D9
-        float b=fract(f*2.0+t*0.12);
-        vec3 c;
-        if     (b<0.25)c=mix(blue,  violet,(b)*4.0);
-        else if(b<0.50)c=mix(violet,lilac, (b-0.25)*4.0);
-        else if(b<0.75)c=mix(lilac, pink,  (b-0.50)*4.0);
-        else           c=mix(pink,  blue,  (b-0.75)*4.0);
-        c*=0.88+0.12*sin(f*6.28+t*0.9);
-        gl_FragColor=vec4(c,1.0);
-      }`;
-
-    function mkShader(type, src) {
-      const s = gl.createShader(type);
-      gl.shaderSource(s, src); gl.compileShader(s); return s;
-    }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, VS));
-    gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, FS));
-    gl.linkProgram(prog); gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-    const ap = gl.getAttribLocation(prog, 'a_pos');
-    gl.enableVertexAttribArray(ap);
-    gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
-    const uT = gl.getUniformLocation(prog, 'u_t');
-
-    // ── Render loop ────────────────────────────────────
-    function frame(ts) {
+    function frame(t) {
       const W = canvas.width, H = canvas.height;
+      const cx = W / 2, cy = H * 0.38; // slightly above center
+      const maxR = Math.hypot(cx, cy) * 1.3;
 
-      // 1. Render fluid into hidden WebGL canvas
-      gl.viewport(0, 0, W, H);
-      gl.uniform1f(uT, ts * 0.001);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      // Spawn
+      if (t - lastSpawn >= INTERVAL) {
+        rings.push({ start: t, color: COLORS[rings.length % COLORS.length] });
+        lastSpawn = t;
+      }
 
-      // 2. Composite: text shape first, then fill with fluid via drawImage (respects source-in)
       ctx.clearRect(0, 0, W, H);
-      ctx.font = `${WEIGHT} ${fontSize}px ${FONT}`;
-      ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = '#000';
-      ctx.fillText(TEXT, 0, Math.round(fontSize * 0.9));
-      ctx.globalCompositeOperation = 'source-in';
-      ctx.drawImage(glCanvas, 0, 0, W, H); // fills only text pixels
-      ctx.globalCompositeOperation = 'source-over';
+
+      rings = rings.filter(ring => t - ring.start < DURATION);
+      rings.forEach(ring => {
+        const p = (t - ring.start) / DURATION; // 0→1
+        const r = p * maxR;
+        // fade in then out: peak at p=0.15, gone at p=1
+        const a = MAX_OPACITY * Math.sin(p * Math.PI) * (1 - p * 0.5);
+        const [rv, gv, bv] = ring.color;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${rv},${gv},${bv},${a.toFixed(3)})`;
+        ctx.lineWidth = LINE_WIDTH;
+        ctx.stroke();
+      });
 
       requestAnimationFrame(frame);
     }
