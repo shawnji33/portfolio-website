@@ -1009,7 +1009,7 @@
     const container = document.querySelector('.header-text');
     function fitHeader() {
       el.style.fontSize = '100px';
-      const scale = container.offsetWidth / el.scrollWidth;
+      const scale = window.innerWidth / el.scrollWidth;
       el.style.fontSize = (100 * scale) + 'px';
     }
     fitHeader();
@@ -1126,21 +1126,30 @@
     }
 
     function updateBlur() {
-      const vh = window.innerHeight;
+      const vh       = window.innerHeight;
+      const scrollY  = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - vh;
+      // When within 80px of page bottom, clear all blur
+      const nearBottom = maxScroll - scrollY < 80;
+
       const clearPx = vh * CLEAR_ZONE;
       const blurPx  = vh * BLUR_ZONE;
 
       document.querySelectorAll(SELECTOR).forEach(el => {
-        const top = el.getBoundingClientRect().top;
+        if (nearBottom) {
+          el.style.filter  = '';
+          el.style.opacity = '';
+          return;
+        }
 
-        let t; // 0 = clear, 1 = fully blurred
+        const top = el.getBoundingClientRect().top;
+        let t;
         if (top <= clearPx) {
           t = 0;
         } else if (top >= blurPx) {
           t = 1;
         } else {
           t = (top - clearPx) / (blurPx - clearPx);
-          // linear — smooth gradual increase, no sudden jump
         }
 
         el.style.filter  = t === 0 ? '' : `blur(${(t * MAX_BLUR).toFixed(1)}px)`;
