@@ -1009,7 +1009,7 @@
     const container = document.querySelector('.header-text');
     function fitHeader() {
       el.style.fontSize = '100px';
-      const scale = (container.offsetWidth * 0.8) / el.scrollWidth;
+      const scale = container.offsetWidth / el.scrollWidth;
       el.style.fontSize = (100 * scale) + 'px';
     }
     fitHeader();
@@ -1025,8 +1025,8 @@
     const CELL      = 30;    // cell width/height (10px gap)
     const CORNER    = 6;     // border-radius
     const BASE_A    = 0.0;   // invisible at rest
-    const PEAK_A    = 0.20;  // opacity at ripple peak
-    const LINE_A    = 0.045; // faint grid line opacity
+    const PEAK_A    = 0.10;  // opacity at ripple peak
+    const LINE_A    = 0.025; // faint grid line opacity
     const SPD       = 280;   // px/s ripple speed
     const BAND_IN   = 55;    // px — approach ramp
     const BAND_OUT  = 110;   // px — fade-out tail
