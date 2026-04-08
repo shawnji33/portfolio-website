@@ -1120,7 +1120,7 @@
 
     // Hidden WebGL canvas — separate from the 2D display canvas
     const glCanvas = document.createElement('canvas');
-    const gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
+    const gl = glCanvas.getContext('webgl', { preserveDrawingBuffer: true }) || glCanvas.getContext('experimental-webgl', { preserveDrawingBuffer: true });
 
     // ── Sizing ────────────────────────────────────────
     let fontSize = 100, canvasH = 110;
@@ -1225,24 +1225,15 @@
       gl.uniform1f(uT, ts * 0.001);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-      // 2. Read pixels, flip Y (WebGL is bottom-up)
-      const px = new Uint8Array(W * H * 4);
-      gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px);
-      const imgData = ctx.createImageData(W, H);
-      for (let y = 0; y < H; y++) {
-        const s = (H - 1 - y) * W * 4;
-        imgData.data.set(px.subarray(s, s + W * 4), y * W * 4);
-      }
-
-      // 3. Composite on 2D canvas: draw text shape, then fill with fluid (source-in)
+      // 2. Composite: text shape first, then fill with fluid via drawImage (respects source-in)
       ctx.clearRect(0, 0, W, H);
       ctx.font = `${WEIGHT} ${fontSize}px ${FONT}`;
       ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = '#000'; // colour doesn't matter — gets replaced
+      ctx.fillStyle = '#000';
       ctx.fillText(TEXT, 0, Math.round(fontSize * 0.9));
       ctx.globalCompositeOperation = 'source-in';
-      ctx.putImageData(imgData, 0, 0);
-      ctx.globalCompositeOperation = 'source-over'; // reset
+      ctx.drawImage(glCanvas, 0, 0, W, H); // fills only text pixels
+      ctx.globalCompositeOperation = 'source-over';
 
       requestAnimationFrame(frame);
     }
