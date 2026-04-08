@@ -454,7 +454,7 @@
       box-shadow: 0 4px 24px rgba(0,105,201,0.3), 0 0 0 1px rgba(0,105,201,0.2);
     }
     .actions-linkedin:active { transform: scale(0.97); }
-    .actions-linkedin h2 { transition: color 0.25s var(--cubicOut); font-family: var(--font-display); font-size: 28px; font-weight: 600; color: #666869; }
+    .actions-linkedin h2 { transition: color 0.25s var(--cubicOut); font-family: var(--font-display); font-size: 28px; font-weight: 600; color: #6A708B; }
     .actions-linkedin:hover h2 { color: white; }
     .li-icon-bg { transition: fill 0.25s var(--cubicOut); }
     .li-icon-fg { transition: fill 0.25s var(--cubicOut); }
@@ -714,7 +714,7 @@
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
     }
-    .tool-chip:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .tool-chip:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
     .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
     .tool-chip-cursor { overflow: visible; width: 62px !important; }
     .tool-chip-cursor img { width: 68px !important; height: 68px !important; position: absolute; top: -5%; left: -5%; }
@@ -871,7 +871,7 @@
       <span class="linkedin-icon" style="display:flex;align-items:center;justify-content:center;flex-shrink:0;width:32px;height:32px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
           <g clip-path="url(#clip0)">
-            <path class="li-icon-bg" d="M24.7744 0H7.22563C3.23502 0 0 3.25 0 7.25908V24.7409C0 28.75 3.23502 32 7.22563 32H24.7744C28.765 32 32 28.75 32 24.7409V7.25908C32 3.25 28.765 0 24.7744 0Z" fill="#666869"/>
+            <path class="li-icon-bg" d="M24.7744 0H7.22563C3.23502 0 0 3.25 0 7.25908V24.7409C0 28.75 3.23502 32 7.22563 32H24.7744C28.765 32 32 28.75 32 24.7409V7.25908C32 3.25 28.765 0 24.7744 0Z" fill="#6A708B"/>
             <path class="li-icon-fg" fill-rule="evenodd" clip-rule="evenodd" d="M12.8102 12.4034H16.8533V14.4855H16.912C17.4752 13.4708 18.852 12.4034 20.9052 12.4034C25.1745 12.4034 25.9639 15.0726 25.9639 18.5448V25.8862H21.7477L21.747 19.3479C21.747 17.8529 21.7164 15.929 19.5545 15.929C17.3595 15.929 17.0227 17.5559 17.0227 19.2393V25.8862H12.8102V12.4034ZM10.4208 8.31642C10.4208 9.53203 9.43828 10.5191 8.22828 10.5191C7.01766 10.5191 6.03516 9.53203 6.03516 8.31642C6.03516 7.10019 7.01766 6.11377 8.22828 6.11377C9.43828 6.11377 10.4208 7.10019 10.4208 8.31642ZM6.03516 12.4034H10.4208V25.8862H6.03516V12.4034Z" fill="white"/>
           </g>
           <defs><clipPath id="clip0"><rect width="32" height="32" fill="white"/></clipPath></defs>
@@ -915,9 +915,10 @@
   <!-- ── Tools & Crafts ──────────────────────────────────── -->
   <section id="tools">
     <div class="tools-label">Tools &amp; Crafts</div>
-    <div class="tools-divider"><img src="tool-divider.svg" alt="" /></div>
+    <!-- Divider -->
+    <div style="width:1px;height:34px;background:rgba(0,0,0,0.12);flex-shrink:0;align-self:center;margin:0 4px;"></div>
     <!-- Figma -->
-    <div class="tool-chip" style="background:rgba(26,188,254,0.1);" title="Figma">
+    <div class="tool-chip" style="background:rgba(10,207,131,0.1);" title="Figma">
       <img src="tool-figma.svg" alt="Figma" style="width:16px;height:24px;" />
     </div>
     <!-- ChatGPT -->
@@ -937,9 +938,20 @@
       <img src="tool-nextjs.svg" alt="Next.js" style="width:25px;height:25px;" />
     </div>
     <!-- Cursor -->
-    <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;gap:8px;" title="Cursor">
-      <img src="tool-cursor-icon.svg" alt="" style="width:17.5px;height:20px;flex-shrink:0;" />
-      <img src="tool-cursor-wordmark.png" alt="CURSOR" style="width:74.7px;height:12.5px;flex-shrink:0;" />
+    <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;" title="Cursor">
+      <img src="tool-cursor-logo.svg" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
+    </div>
+    <!-- Notion -->
+    <div class="tool-chip" style="background:rgba(0,0,0,0.06);" title="Notion">
+      <img src="tool-notion.svg" alt="Notion" style="width:24px;height:25px;" />
+    </div>
+    <!-- Vercel -->
+    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="Vercel">
+      <img src="tool-vercel.svg" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
+    </div>
+    <!-- GitHub -->
+    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="GitHub">
+      <img src="tool-github.svg" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
     </div>
   </section>
 
