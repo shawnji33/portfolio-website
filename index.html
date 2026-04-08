@@ -417,9 +417,7 @@
       gap: 48px;
       flex-shrink: 0;
       will-change: transform;
-      animation: ticker-scroll 30s linear infinite;
     }
-    .actions-ticker:hover .ticker-strip { animation-play-state: paused; }
     .ticker-logo-wrap {
       flex-shrink: 0;
       display: flex;
@@ -434,10 +432,6 @@
       transition: filter 0.5s var(--cubicOut), opacity 0.5s var(--cubicOut);
     }
     .actions-ticker:hover .ticker-logo { filter: grayscale(0%); opacity: 1; }
-    @keyframes ticker-scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-700px); }
-    }
 
     /* ─── Interval ───────────────────────────────── */
     .interval {
@@ -968,6 +962,42 @@
     const w = frame ? frame.offsetWidth + 4 : 400;
     el.scrollBy({ left: dir * w, behavior: 'smooth' });
   }
+
+  // ── Ticker ────────────────────────────────────────────
+  (function () {
+    const strip = document.querySelector('.ticker-strip');
+    const ticker = document.querySelector('.actions-ticker');
+    const SET_WIDTH = 700;
+
+    const anim = strip.animate(
+      [{ transform: 'translateX(0px)' }, { transform: `translateX(-${SET_WIDTH}px)` }],
+      { duration: 30000, iterations: Infinity, easing: 'linear' }
+    );
+
+    let targetRate = 1;
+    let currentRate = 1;
+    let raf = null;
+
+    function tick() {
+      currentRate += (targetRate - currentRate) * 0.07;
+      anim.playbackRate = currentRate;
+      if (Math.abs(targetRate - currentRate) > 0.002) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        anim.playbackRate = targetRate;
+        raf = null;
+      }
+    }
+
+    function setRate(r) {
+      targetRate = r;
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(tick);
+    }
+
+    ticker.addEventListener('mouseenter', () => setRate(0.25));
+    ticker.addEventListener('mouseleave', () => setRate(1));
+  })();
 
   // ── Tilt badges ───────────────────────────────────────
   document.querySelectorAll('.tilt-badge').forEach(badge => {
