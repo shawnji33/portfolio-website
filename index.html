@@ -716,8 +716,8 @@
     }
     .tool-chip:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
     .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-    .tool-chip-cursor { overflow: visible; }
-    .tool-chip-cursor img { width: 110%; height: 110%; object-fit: cover; position: absolute; top: -5%; left: -5%; }
+    .tool-chip-cursor { overflow: visible; width: 62px !important; }
+    .tool-chip-cursor img { width: 68px !important; height: 68px !important; position: absolute; top: -5%; left: -5%; }
 
     /* ─── Video CTA ──────────────────────────────── */
     #video-cta {
@@ -921,29 +921,30 @@
     <div class="tool-chip" style="background:rgba(26,188,254,0.1);" title="Figma">
       <img src="tool-figma.png" alt="Figma" style="width:16px;height:24px;" />
     </div>
-    <!-- Cursor -->
-    <div class="tool-chip tool-chip-cursor" style="background:rgba(90,93,115,0.1);" title="Cursor">
-      <img src="tool-cursor.png" alt="Cursor" />
+    <!-- ChatGPT -->
+    <div class="tool-chip" style="background:rgba(0,0,0,0.05);" title="ChatGPT">
+      <img src="tool-chatgpt.png" alt="ChatGPT" style="width:24px;height:24px;" />
     </div>
     <!-- Claude -->
-    <div class="tool-chip" style="background:rgba(217,119,87,0.1);padding:0 14px;" title="Claude">
+    <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 20px;" title="Claude">
       <img src="tool-claude.png" alt="Claude" style="width:93px;height:20px;" />
-    </div>
-    <!-- Next.js -->
-    <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
-      <img src="tool-nextjs.png" alt="Next.js" style="width:24px;height:24px;" />
     </div>
     <!-- Linear -->
     <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Linear">
       <img src="tool-linear.png" alt="Linear" style="width:26px;height:25px;object-fit:cover;" />
     </div>
-    <!-- Spline -->
-    <div class="tool-chip" style="background:rgba(114,113,109,0.1);" title="Spline">
-      <img src="tool-spline.png" alt="Spline" style="width:21px;height:24px;" />
+    <!-- Next.js -->
+    <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
+      <img src="tool-nextjs.png" alt="Next.js" style="width:24px;height:24px;" />
     </div>
-    <!-- ChatGPT -->
-    <div class="tool-chip" style="background:rgba(0,0,0,0.05);" title="ChatGPT">
-      <img src="tool-chatgpt.png" alt="ChatGPT" style="width:24px;height:24px;" />
+    <!-- Cursor sphere -->
+    <div class="tool-chip tool-chip-cursor" style="background:transparent;border:none;box-shadow:none;" title="Cursor">
+      <img src="tool-cursor-sphere.png" alt="Cursor" style="width:68px;height:68px;object-fit:contain;" />
+    </div>
+    <!-- Cursor text chip -->
+    <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;gap:8px;display:flex;align-items:center;" title="Cursor">
+      <img src="tool-cursor-icon.png" alt="" style="width:17.5px;height:20px;" />
+      <img src="tool-cursor-text.png" alt="CURSOR" style="width:74.7px;height:12.5px;" />
     </div>
   </section>
 
