@@ -1184,11 +1184,11 @@
         float q1=fbm(uv*3.0+t*0.5);
         float q2=fbm(uv*3.0+vec2(q1*1.5,q1)+t*0.35);
         float f =fbm(uv*2.8+vec2(q1+q2,q2*0.9)-t*0.25);
-        // Brand palette — light pastel
-        vec3 blue  =vec3(0.65,0.78,0.98);
-        vec3 violet=vec3(0.74,0.72,0.97);
-        vec3 lilac =vec3(0.87,0.73,0.96);
-        vec3 pink  =vec3(0.98,0.82,0.88);
+        // Exact brand colors
+        vec3 blue  =vec3(0.388,0.608,0.933); // #639BEE
+        vec3 violet=vec3(0.698,0.667,0.929); // #B2AAED
+        vec3 lilac =vec3(0.890,0.675,0.929); // #E3ACED
+        vec3 pink  =vec3(0.933,0.784,0.851); // #EEC8D9
         float b=fract(f*2.0+t*0.12);
         vec3 c;
         if     (b<0.25)c=mix(blue,  violet,(b)*4.0);
