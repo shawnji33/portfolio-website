@@ -1240,6 +1240,60 @@
     requestAnimationFrame(frame);
   })();
 
+  // ── Scroll blur reveal ────────────────────────────────
+  (function () {
+    // Elements to blur — cells, project blocks, carousels, action rows
+    const SELECTOR = '.cell, .project, .carousel, #actions, #viewmore, footer';
+    const CLEAR_ZONE  = 0.55; // above 55% vh → fully clear
+    const BLUR_ZONE   = 0.78; // below 78% vh → fully blurred
+    const MAX_BLUR    = 9;    // px
+    const MIN_OPACITY = 0.18;
+
+    // Add base transition to every targeted element
+    function initElements() {
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        el.style.transition = 'filter 0.25s ease-out, opacity 0.25s ease-out';
+      });
+    }
+
+    function updateBlur() {
+      const vh = window.innerHeight;
+      const clearPx = vh * CLEAR_ZONE;
+      const blurPx  = vh * BLUR_ZONE;
+
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        const top = el.getBoundingClientRect().top;
+
+        let t; // 0 = clear, 1 = fully blurred
+        if (top <= clearPx) {
+          t = 0;
+        } else if (top >= blurPx) {
+          t = 1;
+        } else {
+          t = (top - clearPx) / (blurPx - clearPx);
+          // ease-in curve so blur hits harder near the bottom
+          t = t * t;
+        }
+
+        el.style.filter  = t === 0 ? '' : `blur(${(t * MAX_BLUR).toFixed(1)}px)`;
+        el.style.opacity = t === 0 ? '' : (1 - t * (1 - MIN_OPACITY)).toFixed(3);
+      });
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => { updateBlur(); ticking = false; });
+        ticking = true;
+      }
+    }
+
+    initElements();
+    updateBlur();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateBlur);
+  })();
+
   // ── Theme toggle ──────────────────────────────────────
   const html = document.documentElement;
   const toggleBtn = document.getElementById('themeToggle');
