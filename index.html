@@ -668,14 +668,23 @@
     #about .cell { padding: var(--padding-medium); }
 
     /* ─── Tools section ──────────────────────────── */
+    #tools-scroll {
+      overflow-x: auto;
+      overflow-y: visible;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 0 4px;
+      margin-bottom: 4px;
+    }
+    #tools-scroll::-webkit-scrollbar { display: none; }
     #tools {
       display: flex;
       flex-direction: row;
       align-items: stretch;
       gap: 4px;
-      padding: 0 4px;
-      margin-bottom: 4px;
       overflow: visible;
+      padding: 4px 0;
+      margin: -4px 0;
     }
     .tools-label {
       background: rgba(255,255,255,0.8);
@@ -789,9 +798,12 @@
       .actions-linkedin { padding-right: 20px; }
       .intro-text { grid-column-end: span 2; font-size: 24px; }
       #tools { flex-wrap: wrap; }
-      #tools .tools-label { width: 100%; flex-shrink: 1; }
+      #tools .tools-label { flex: 1 0 100%; }
       #tools > div[style*="flex:1"] { display: none; }
       #tools > div[style*="width:1px"] { display: none; }
+    }
+    @media (max-width: 1200px) {
+      #tools > div[style*="flex:1"] { display: none; }
     }
 
     ::selection { background: rgba(0,0,0,0.08); }
@@ -864,7 +876,7 @@
   <section class="grid" id="intro">
     <div class="cell span-all">
       <p class="intro-text">
-        I'm <span style="color:#30313B">Shawn Ji</span>, a Product designer based in <span style="color:#30313B">Toronto</span>
+        I'm <span style="color:#30313B">Shawn Ji</span>, a product designer based in <span style="color:#30313B">Toronto</span>
         <span class="tilt-badge" id="badge-toronto" style="background:#efe8e7"><img src="badge-toronto.png" alt="Toronto" /></span>,
         obsessed with <span style="color:#30313B">Fin-tech</span>
         <span class="tilt-badge" id="badge-fintech" style="background:#ede7ef"><img src="badge-fintech.png" alt="Fin-tech" /></span>,
@@ -924,8 +936,12 @@
   </section>
 
   <!-- ── Tools & Crafts ──────────────────────────────────── -->
+  <div id="tools-scroll">
   <section id="tools">
-    <div class="tools-label">Tools &amp; Crafts</div>
+    <div class="tools-label" style="gap:10px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#5a5d73" viewBox="0 0 256 256" style="flex-shrink:0;"><path d="M232,120v72a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V120Z" opacity="0.4"></path><path d="M224,64H176V56a24,24,0,0,0-24-24H104A24,24,0,0,0,80,56v8H32A16,16,0,0,0,16,80V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V80A16,16,0,0,0,224,64ZM96,56a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM32,80H224v32H192v-8a8,8,0,0,0-16,0v8H80v-8a8,8,0,0,0-16,0v8H32ZM224,192H32V128H64v8a8,8,0,0,0,16,0v-8h96v8a8,8,0,0,0,16,0v-8h32v64Z"></path></svg>
+      Tools &amp; Crafts
+    </div>
     <!-- Divider -->
     <div style="width:1px;height:34px;background:rgba(0,0,0,0.12);flex-shrink:0;align-self:center;margin:0 4px;"></div>
     <!-- Figma -->
@@ -969,10 +985,11 @@
       <img src="tool-codex.svg" alt="Codex" style="width:24px;height:24px;" />
     </div>
     <!-- Filler -->
-    <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.6) 0%,rgba(204,205,233,0.6) 22.6%,rgba(231,185,221,0.6) 47.7%,rgba(231,208,196,0.6) 72.6%,rgba(231,219,184,0.6) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 20px;">
+    <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.36) 0%,rgba(204,205,233,0.36) 22.6%,rgba(231,185,221,0.36) 47.7%,rgba(231,208,196,0.36) 72.6%,rgba(231,219,184,0.36) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 20px;">
       <p style="font-family:var(--font-regular);font-size:18px;font-weight:400;color:#5a5d73;letter-spacing:-0.7px;margin:0;">Grinding more<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
     </div>
   </section>
+  </div>
 
   <!-- ── Projects (removed) ───────────────────────────── -->
   <div id="projects" style="display:none">
