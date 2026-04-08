@@ -1244,10 +1244,10 @@
   (function () {
     // Elements to blur — cells, project blocks, carousels, action rows
     const SELECTOR = '.cell, .project, .carousel, #actions, #viewmore, footer';
-    const CLEAR_ZONE  = 0.45; // above 45% vh → fully clear
-    const BLUR_ZONE   = 1.10; // reaches max blur well below viewport bottom
-    const MAX_BLUR    = 5;    // px — soft cap so it never looks destroyed
-    const MIN_OPACITY = 0.55; // stays readable even at max blur
+    const CLEAR_ZONE  = 0.65; // above 65% vh → zero blur
+    const BLUR_ZONE   = 1.05; // just off bottom of viewport → max blur
+    const MAX_BLUR    = 4;    // px — very subtle at maximum
+    const MIN_OPACITY = 0.65; // barely fades even at max
 
     // Add base transition to every targeted element
     function initElements() {
