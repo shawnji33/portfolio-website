@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 16 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Figma-logo 1" clip-path="url(#clip0_0_21)">
+<path id="path0_fill" d="M4.0008 24C6.20836 24 8 22.208 8 20V16H4.0008C1.79324 16 0.00159999 17.792 0.00159999 20C0.00159999 22.208 1.79324 24 4.0008 24Z" fill="var(--fill-0, #0ACF83)"/>
+<path id="path1_fill" d="M0.00159999 12C0.00159999 9.792 1.79324 8 4.0008 8H8V16H4.0008C1.79324 16 0.00159999 14.208 0.00159999 12Z" fill="var(--fill-0, #A259FF)"/>
+<path id="path1_fill_1_" d="M0.00139999 4C0.00139999 1.792 1.79304 3.8147e-07 4.0006 3.8147e-07H7.9998V8H4.0006C1.79304 8 0.00139999 6.208 0.00139999 4Z" fill="var(--fill-0, #F24E1E)"/>
+<path id="path2_fill" d="M8 4.57764e-07H11.9992C14.2068 4.57764e-07 15.9984 1.792 15.9984 4C15.9984 6.208 14.2068 8 11.9992 8H8V4.57764e-07Z" fill="var(--fill-0, #FF7262)"/>
+<path id="path3_fill" d="M15.9984 12C15.9984 14.208 14.2068 16 11.9992 16C9.79164 16 8 14.208 8 12C8 9.792 9.79164 8 11.9992 8C14.2068 8 15.9984 9.792 15.9984 12Z" fill="var(--fill-0, #1ABCFE)"/>
+</g>
+<defs>
+<clipPath id="clip0_0_21">
+<rect width="16" height="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>

@@ -167,6 +167,25 @@
     .span-all  { grid-column: 1 / span 4; }
     .span-half { grid-column-end: span 2; }
 
+    /* ─── Scroll reveal ──────────────────────────── */
+    .sr {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .sr.sr-clip {
+      transform: none;
+      clip-path: inset(0 0 36% 0);
+      transition: opacity 0.36s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  clip-path 0.36s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .sr.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      clip-path: inset(0 0 0% 0);
+    }
+
     /* ─── Cell ───────────────────────────────────── */
     .cell {
       background: var(--cell-background);
@@ -641,6 +660,65 @@
     /* ─── About ──────────────────────────────────── */
     #about .cell { padding: var(--padding-medium); }
 
+    /* ─── Tools section ──────────────────────────── */
+    #tools {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 4px;
+      padding: 0 4px;
+      margin-bottom: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #tools::-webkit-scrollbar { display: none; }
+    .tools-label {
+      background: rgba(255,255,255,0.8);
+      border: 0.8px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      flex-shrink: 0;
+      height: 62px;
+      font-family: var(--font-regular);
+      font-size: 20px;
+      font-weight: 400;
+      color: #5a5d73;
+      letter-spacing: -0.7px;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .tools-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 16px;
+      height: 62px;
+    }
+    .tools-divider img { width: 8px; height: 34px; object-fit: contain; }
+    .tool-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 62px;
+      height: 62px;
+      border-radius: 16px;
+      border: 0.8px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tool-chip:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+    .tool-chip-cursor { overflow: visible; }
+    .tool-chip-cursor img { width: 110%; height: 110%; object-fit: cover; position: absolute; top: -5%; left: -5%; }
+
     /* ─── Video CTA ──────────────────────────────── */
     #video-cta {
       padding: var(--gap);
@@ -832,6 +910,40 @@
           <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ── Tools & Crafts ──────────────────────────────────── -->
+  <section id="tools">
+    <div class="tools-label">Tools &amp; Crafts</div>
+    <div class="tools-divider"><img src="tool-divider.png" alt="" /></div>
+    <!-- Figma -->
+    <div class="tool-chip" style="background:rgba(26,188,254,0.1);" title="Figma">
+      <img src="tool-figma.png" alt="Figma" style="width:16px;height:24px;" />
+    </div>
+    <!-- Cursor -->
+    <div class="tool-chip tool-chip-cursor" style="background:rgba(90,93,115,0.1);" title="Cursor">
+      <img src="tool-cursor.png" alt="Cursor" />
+    </div>
+    <!-- Claude -->
+    <div class="tool-chip" style="background:rgba(217,119,87,0.1);padding:0 14px;" title="Claude">
+      <img src="tool-claude.png" alt="Claude" style="width:93px;height:20px;" />
+    </div>
+    <!-- Next.js -->
+    <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
+      <img src="tool-nextjs.png" alt="Next.js" style="width:24px;height:24px;" />
+    </div>
+    <!-- Linear -->
+    <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Linear">
+      <img src="tool-linear.png" alt="Linear" style="width:26px;height:25px;object-fit:cover;" />
+    </div>
+    <!-- Spline -->
+    <div class="tool-chip" style="background:rgba(114,113,109,0.1);" title="Spline">
+      <img src="tool-spline.png" alt="Spline" style="width:21px;height:24px;" />
+    </div>
+    <!-- ChatGPT -->
+    <div class="tool-chip" style="background:rgba(0,0,0,0.05);" title="ChatGPT">
+      <img src="tool-chatgpt.png" alt="ChatGPT" style="width:24px;height:24px;" />
     </div>
   </section>
 
@@ -1301,6 +1413,37 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
+  })();
+
+  // ── Scroll-triggered reveals ──────────────────────────
+  (function () {
+    // Video CTA gets a clip-path wipe; everything else gets fade-up
+    document.querySelectorAll('#video-cta .video-cta-card').forEach(el => el.classList.add('sr', 'sr-clip'));
+    document.querySelectorAll('.cell, .actions-linkedin, .actions-ticker, footer').forEach(el => el.classList.add('sr'));
+
+    // Group siblings within the same parent so we can stagger them
+    const seen = new Set();
+    document.querySelectorAll('.sr').forEach(el => {
+      if (seen.has(el)) return;
+      const siblings = Array.from(el.parentElement.querySelectorAll(':scope > .sr'));
+      siblings.forEach((sib, i) => {
+        sib.style.transitionDelay = `${i * 55}ms`;
+        seen.add(sib);
+      });
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        el.classList.add('revealed');
+        // Clear delay after animation so scroll-blur transitions aren't staggered
+        setTimeout(() => { el.style.transitionDelay = ''; }, 600);
+        io.unobserve(el);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.sr').forEach(el => io.observe(el));
   })();
 
   // ── Scroll blur reveal ────────────────────────────────
