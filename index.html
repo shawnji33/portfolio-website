@@ -487,6 +487,13 @@
       0%   { opacity: 0.1; }
       100% { opacity: 1; }
     }
+    @keyframes loadingDot {
+      0%, 60%, 100% { opacity: 0.2; }
+      30% { opacity: 1; }
+    }
+    .loading-dots span { animation: loadingDot 1.4s ease-in-out infinite; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
     /* ─── Ticker ─────────────────────────────────── */
     .ticker-list {
@@ -682,7 +689,7 @@
       height: 62px;
       font-family: var(--font-regular);
       font-size: 20px;
-      font-weight: 400;
+      font-weight: 500;
       color: #5a5d73;
       letter-spacing: -0.7px;
       white-space: nowrap;
@@ -781,6 +788,10 @@
       .actions-ticker { flex: none; align-self: stretch; }
       .actions-linkedin { padding-right: 20px; }
       .intro-text { grid-column-end: span 2; font-size: 24px; }
+      #tools { flex-wrap: wrap; }
+      #tools .tools-label { width: 100%; flex-shrink: 1; }
+      #tools > div[style*="flex:1"] { display: none; }
+      #tools > div[style*="width:1px"] { display: none; }
     }
 
     ::selection { background: rgba(0,0,0,0.08); }
@@ -929,10 +940,6 @@
     <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 20px;" title="Claude">
       <img src="tool-claude.svg" alt="Claude" style="width:93px;height:20px;" />
     </div>
-    <!-- Linear -->
-    <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Linear">
-      <img src="tool-linear.svg" alt="Linear" style="width:27px;height:27px;" />
-    </div>
     <!-- Next.js -->
     <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
       <img src="tool-nextjs.svg" alt="Next.js" style="width:25px;height:25px;" />
@@ -940,6 +947,10 @@
     <!-- Cursor -->
     <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;" title="Cursor">
       <img src="tool-cursor-logo.svg" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
+    </div>
+    <!-- Framer -->
+    <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Framer">
+      <img src="tool-framer.svg" alt="Framer" style="width:29px;height:28px;" />
     </div>
     <!-- Notion -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);" title="Notion">
@@ -952,6 +963,14 @@
     <!-- GitHub -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="GitHub">
       <img src="tool-github.svg" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
+    </div>
+    <!-- Codex -->
+    <div class="tool-chip" style="background:rgba(138,160,255,0.1);" title="Codex">
+      <img src="tool-codex.svg" alt="Codex" style="width:24px;height:24px;" />
+    </div>
+    <!-- Filler -->
+    <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.6) 0%,rgba(204,205,233,0.6) 22.6%,rgba(231,185,221,0.6) 47.7%,rgba(231,208,196,0.6) 72.6%,rgba(231,219,184,0.6) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 20px;">
+      <p style="font-family:var(--font-regular);font-size:18px;font-weight:400;color:#5a5d73;letter-spacing:-0.7px;margin:0;">Grinding more<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
     </div>
   </section>
 
