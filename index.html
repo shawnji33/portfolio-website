@@ -636,14 +636,6 @@
     [data-theme="dark"] #cursorGlow {
       background: radial-gradient(560px circle at var(--gx, -999px) var(--gy, -999px), rgba(255,255,255,0.11), transparent 65%);
     }
-    #rippleCanvas {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
   </style>
 </head>
 <body>
@@ -657,8 +649,6 @@
 
 <!-- Cursor glow -->
 <div id="cursorGlow" aria-hidden="true"></div>
-<!-- Ripple canvas -->
-<canvas id="rippleCanvas" aria-hidden="true"></canvas>
 
 <div class="page">
 
@@ -965,22 +955,10 @@
 </div><!-- /.page -->
 
 <script>
-  // ── Cursor glow + ripples ─────────────────────────────
+  // ── Cursor glow ───────────────────────────────────────
   (function () {
-    const glowEl  = document.getElementById('cursorGlow');
-    const canvas  = document.getElementById('rippleCanvas');
-    const ctx     = canvas.getContext('2d');
-    const root    = document.documentElement;
-
-    // Resize canvas to viewport
-    function resizeCanvas() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas, { passive: true });
-
-    // Glow lerp state
+    const glowEl = document.getElementById('cursorGlow');
+    const root   = document.documentElement;
     let tx = -999, ty = -999, cx = -999, cy = -999;
     let glowRaf = null, visible = false;
 
@@ -993,58 +971,14 @@
         ? requestAnimationFrame(glowStep) : null;
     }
 
-    // Ripple state
-    const ripples = [];
-    let lastRipple = 0;
-
-    function spawnRipple(x, y) {
-      ripples.push({ x, y, r: 0, alpha: 0.45 });
-    }
-
-    // Combined RAF loop for ripples
-    function rippleLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      const baseColor = dark ? '180,190,255' : '255,255,255';
-
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const rp = ripples[i];
-        rp.r     += 2.8;
-        rp.alpha -= 0.016;
-        if (rp.alpha <= 0) { ripples.splice(i, 1); continue; }
-        ctx.beginPath();
-        ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${baseColor},${rp.alpha.toFixed(3)})`;
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-      }
-
-      requestAnimationFrame(rippleLoop);
-    }
-    rippleLoop();
-
-    // Mousemove — drive glow + throttled ripples
     document.addEventListener('mousemove', (e) => {
       tx = e.clientX; ty = e.clientY;
-
-      if (!visible) {
-        glowEl.style.opacity = '1';
-        canvas.style.opacity = '1';
-        visible = true;
-      }
+      if (!visible) { glowEl.style.opacity = '1'; visible = true; }
       if (!glowRaf) glowRaf = requestAnimationFrame(glowStep);
-
-      const now = Date.now();
-      if (now - lastRipple > 90) {
-        spawnRipple(e.clientX, e.clientY);
-        lastRipple = now;
-      }
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
-      glowEl.style.opacity = '0';
-      canvas.style.opacity = '0';
-      visible = false;
+      glowEl.style.opacity = '0'; visible = false;
     });
   })();
 
