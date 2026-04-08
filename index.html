@@ -63,7 +63,8 @@
     [data-theme="dark"] ::selection { background: rgba(255,255,255,0.1); }
 
     /* ─── Base ───────────────────────────────────── */
-    html { height: 100%; background: var(--background); }
+    html { height: 100%; background: #ede8f8; }
+    [data-theme="dark"] html { background: hsl(0,0%,4%); }
     body {
       min-height: 100%;
       cursor: default;
@@ -132,43 +133,92 @@
     a.inline:hover::after { transform-origin: 0% 50%; transform: scaleX(1); }
     a:active { transform: scale(0.9); }
 
-    /* ─── Mesh background ────────────────────────── */
+    /* ─── Fluid gradient background ─────────────── */
     .mesh-bg {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background-image: url('gradient.webp');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      overflow: hidden;
+      background: #ede8f8;
     }
-    .mesh-bg::before {
-      content: "";
+    [data-theme="dark"] .mesh-bg { background: hsl(0,0%,4%); }
+
+    .blob {
       position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.10);
+      width: 150%;
+      height: 150%;
+      left: -25%;
+      top: -25%;
+      filter: blur(90px);
+      will-change: transform;
     }
-    .mesh-fade-top {
+    .blob-1 {
+      background: radial-gradient(circle at 75% 45%, rgba(210,185,240,0.9) 0%, transparent 55%);
+      animation: blob1 16s ease-in-out infinite alternate;
+    }
+    .blob-2 {
+      background: radial-gradient(circle at 25% 75%, rgba(235,195,220,0.85) 0%, transparent 55%);
+      animation: blob2 20s ease-in-out infinite alternate;
+    }
+    .blob-3 {
+      background: radial-gradient(circle at 55% 20%, rgba(185,205,245,0.85) 0%, transparent 55%);
+      animation: blob3 18s ease-in-out infinite alternate;
+    }
+    @keyframes blob1 {
+      0%   { transform: translateX(0%)    translateY(0%); }
+      33%  { transform: translateX(14%)   translateY(10%); }
+      66%  { transform: translateX(-8%)   translateY(18%); }
+      100% { transform: translateX(18%)   translateY(-8%); }
+    }
+    @keyframes blob2 {
+      0%   { transform: translateX(0%)    translateY(0%); }
+      33%  { transform: translateX(-13%)  translateY(14%); }
+      66%  { transform: translateX(9%)    translateY(-7%); }
+      100% { transform: translateX(-16%)  translateY(11%); }
+    }
+    @keyframes blob3 {
+      0%   { transform: translateX(0%)    translateY(0%); }
+      33%  { transform: translateX(9%)    translateY(-13%); }
+      66%  { transform: translateX(-6%)   translateY(9%); }
+      100% { transform: translateX(13%)   translateY(-16%); }
+    }
+
+    /* Light beam */
+    .light-beam {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(248,247,255,0.30) 0%, transparent 50%);
+      width: 60%;
+      height: 200%;
+      top: -50%;
+      left: 20%;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+      transform: rotate(-10deg);
+      animation: beam 22s ease-in-out infinite alternate;
+      pointer-events: none;
     }
+    @keyframes beam {
+      0%   { opacity: 0.4; transform: rotate(-10deg) translateX(-10%); }
+      50%  { opacity: 0.7; }
+      100% { opacity: 0.4; transform: rotate(-10deg) translateX(20%); }
+    }
+    [data-theme="dark"] .blob-1 { background: radial-gradient(circle at 75% 45%, rgba(100,80,140,0.5) 0%, transparent 55%); }
+    [data-theme="dark"] .blob-2 { background: radial-gradient(circle at 25% 75%, rgba(120,80,110,0.5) 0%, transparent 55%); }
+    [data-theme="dark"] .blob-3 { background: radial-gradient(circle at 55% 20%, rgba(70,90,140,0.5) 0%, transparent 55%); }
+    [data-theme="dark"] .light-beam { background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%); }
+
     .mesh-noise {
       position: absolute;
       inset: 0;
       background-image: url('noise.webp');
       background-size: cover;
-      opacity: 0.02;
+      opacity: 0.025;
     }
     .mesh-fade-bottom {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, var(--background) 0%, transparent 25%);
+      background: linear-gradient(to top, var(--background) 0%, transparent 30%);
     }
-    [data-theme="dark"] .mesh-bg::before { background: rgba(0,0,0,0.40); }
-    [data-theme="dark"] .mesh-fade-top { background: linear-gradient(to bottom, rgba(10,10,10,0.40) 0%, transparent 50%); }
-    [data-theme="dark"] .mesh-fade-bottom { background: linear-gradient(to top, hsl(0,0%,4%) 0%, transparent 25%); }
+    [data-theme="dark"] .mesh-fade-bottom { background: linear-gradient(to top, hsl(0,0%,4%) 0%, transparent 30%); }
 
     /* ─── Layout wrapper ─────────────────────────── */
     .page { position: relative; z-index: 1; }
@@ -644,7 +694,10 @@
 
 <!-- Mesh background -->
 <div class="mesh-bg" aria-hidden="true">
-  <div class="mesh-fade-top"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="light-beam"></div>
   <div class="mesh-noise"></div>
   <div class="mesh-fade-bottom"></div>
 </div>
