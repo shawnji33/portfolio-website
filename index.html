@@ -1184,18 +1184,18 @@
         float q1=fbm(uv*3.0+t*0.5);
         float q2=fbm(uv*3.0+vec2(q1*1.5,q1)+t*0.35);
         float f =fbm(uv*2.8+vec2(q1+q2,q2*0.9)-t*0.25);
-        // Brand palette — boosted saturation
-        vec3 blue  =vec3(0.28,0.52,0.95);
-        vec3 violet=vec3(0.52,0.46,0.92);
-        vec3 lilac =vec3(0.75,0.48,0.88);
-        vec3 pink  =vec3(0.96,0.56,0.70);
+        // Brand palette — light pastel
+        vec3 blue  =vec3(0.65,0.78,0.98);
+        vec3 violet=vec3(0.74,0.72,0.97);
+        vec3 lilac =vec3(0.87,0.73,0.96);
+        vec3 pink  =vec3(0.98,0.82,0.88);
         float b=fract(f*2.0+t*0.12);
         vec3 c;
         if     (b<0.25)c=mix(blue,  violet,(b)*4.0);
         else if(b<0.50)c=mix(violet,lilac, (b-0.25)*4.0);
         else if(b<0.75)c=mix(lilac, pink,  (b-0.50)*4.0);
         else           c=mix(pink,  blue,  (b-0.75)*4.0);
-        c*=0.68+0.32*sin(f*6.28+t*0.9);
+        c*=0.88+0.12*sin(f*6.28+t*0.9);
         gl_FragColor=vec4(c,1.0);
       }`;
 
