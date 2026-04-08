@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shawn Ji — Product Designer</title>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
-  <link rel="preconnect" href="https://api.fontshare.com" />
+<link rel="preconnect" href="https://api.fontshare.com" />
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -426,7 +425,9 @@
       height: auto;
     }
     .actions-open {
-      background: #bfc6d1;
+      background: rgba(159,169,187,0.10);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       box-shadow: 0 2px 8px rgba(10,13,18,0.03), 0 0 0 1px rgba(10,13,18,0.03);
     }
     .actions-open h1 {
@@ -492,6 +493,7 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .actions-audio:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .actions-audio:active { transform: scale(0.96); box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: transform 0.08s ease, box-shadow 0.08s ease; }
     .audio-wave-bars {
       display: flex;
       align-items: center;
@@ -500,16 +502,19 @@
     }
     .audio-bar {
       width: 2.5px;
-      height: 3px;
+      height: 24px;
       background: rgba(255,255,255,0.8);
       border-radius: 2px;
-      transition: height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: scaleY(0.125);
+      transform-origin: center;
+      will-change: transform;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    @keyframes ab1 { 0%,100%{height:3px} 50%{height:7px} }
-    @keyframes ab2 { 0%,100%{height:3px} 50%{height:13px} }
-    @keyframes ab3 { 0%,100%{height:3px} 50%{height:19px} }
-    @keyframes ab4 { 0%,100%{height:3px} 50%{height:15px} }
-    @keyframes ab5 { 0%,100%{height:3px} 50%{height:22px} }
+    @keyframes ab1 { 0%,100%{transform:scaleY(0.125)} 50%{transform:scaleY(0.292)} }
+    @keyframes ab2 { 0%,100%{transform:scaleY(0.125)} 50%{transform:scaleY(0.542)} }
+    @keyframes ab3 { 0%,100%{transform:scaleY(0.125)} 50%{transform:scaleY(0.792)} }
+    @keyframes ab4 { 0%,100%{transform:scaleY(0.125)} 50%{transform:scaleY(0.625)} }
+    @keyframes ab5 { 0%,100%{transform:scaleY(0.125)} 50%{transform:scaleY(0.917)} }
     .actions-audio.playing .audio-bar:nth-child(1)  { animation: ab1 0.70s ease-in-out infinite 0.00s; }
     .actions-audio.playing .audio-bar:nth-child(2)  { animation: ab2 0.65s ease-in-out infinite 0.07s; }
     .actions-audio.playing .audio-bar:nth-child(3)  { animation: ab3 0.80s ease-in-out infinite 0.14s; }
@@ -928,7 +933,7 @@
   <!-- ── Actions ───────────────────────────────────────── -->
   <section id="actions">
     <div class="cell actions-open">
-      <h1 class="current">Open to Work</h1>
+      <h1 class="current">Designer @Surmount</h1>
     </div>
     <a class="actions-linkedin" href="https://www.linkedin.com/in/shawnji/" target="_blank" rel="noopener noreferrer">
       <span class="linkedin-icon" style="display:flex;align-items:center;justify-content:center;flex-shrink:0;width:32px;height:32px;">
@@ -943,7 +948,7 @@
       <h2>LinkedIn</h2>
     </a>
     <div class="actions-audio" id="audioPlayer">
-      <audio id="audioEl" src="ryoish-january-336894.mp3" preload="auto" loop></audio>
+      <audio id="audioEl" src="ryoish-january-336894.mp3" preload="metadata" loop></audio>
       <div class="audio-wave-bars">
         <span class="audio-bar"></span>
         <span class="audio-bar"></span>
@@ -961,30 +966,30 @@
       <div class="ticker-list">
         <div class="ticker-strip">
           <!-- 4 sets for seamless loop -->
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
         </div>
       </div>
     </div>
@@ -1000,43 +1005,43 @@
     <div style="width:1px;height:34px;background:rgba(0,0,0,0.12);flex-shrink:0;align-self:center;margin:0 4px;"></div>
     <!-- Figma -->
     <div class="tool-chip" style="background:rgba(10,207,131,0.1);" title="Figma">
-      <img src="tool-figma.svg" alt="Figma" style="width:16px;height:24px;" />
+      <img src="tool-figma.svg" alt="Figma" style="width:16px;height:24px;" loading="lazy" />
     </div>
     <!-- ChatGPT -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.05);" title="ChatGPT">
-      <img src="tool-chatgpt.svg" alt="ChatGPT" style="width:24px;height:24px;" />
+      <img src="tool-chatgpt.svg" loading="lazy" alt="ChatGPT" style="width:24px;height:24px;" />
     </div>
     <!-- Claude -->
     <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 20px;" title="Claude">
-      <img src="tool-claude.svg" alt="Claude" style="width:93px;height:20px;" />
+      <img src="tool-claude.svg" loading="lazy" alt="Claude" style="width:93px;height:20px;" />
     </div>
     <!-- Next.js -->
     <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
-      <img src="tool-nextjs.svg" alt="Next.js" style="width:25px;height:25px;" />
+      <img src="tool-nextjs.svg" loading="lazy" alt="Next.js" style="width:25px;height:25px;" />
     </div>
     <!-- Cursor -->
     <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;" title="Cursor">
-      <img src="tool-cursor-logo.svg" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
+      <img src="tool-cursor-logo.svg" loading="lazy" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
     </div>
     <!-- Framer -->
     <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Framer">
-      <img src="tool-framer.svg" alt="Framer" style="width:29px;height:28px;" />
+      <img src="tool-framer.svg" loading="lazy" alt="Framer" style="width:29px;height:28px;" />
     </div>
     <!-- Notion -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);" title="Notion">
-      <img src="tool-notion.svg" alt="Notion" style="width:24px;height:25px;" />
+      <img src="tool-notion.svg" loading="lazy" alt="Notion" style="width:24px;height:25px;" />
     </div>
     <!-- Vercel -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="Vercel">
-      <img src="tool-vercel.svg" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
+      <img src="tool-vercel.svg" loading="lazy" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
     </div>
     <!-- GitHub -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="GitHub">
-      <img src="tool-github.svg" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
+      <img src="tool-github.svg" loading="lazy" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
     </div>
     <!-- Codex -->
     <div class="tool-chip" style="background:rgba(138,160,255,0.1);" title="Codex">
-      <img src="tool-codex.svg" alt="Codex" style="width:24px;height:24px;" />
+      <img src="tool-codex.svg" loading="lazy" alt="Codex" style="width:24px;height:24px;" />
     </div>
     <!-- Filler -->
     <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.36) 0%,rgba(204,205,233,0.36) 22.6%,rgba(231,185,221,0.36) 47.7%,rgba(231,208,196,0.36) 72.6%,rgba(231,219,184,0.36) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 20px;">
@@ -1696,7 +1701,7 @@
     }).catch(function () {});
 
     const bars = Array.from(player.querySelectorAll('.audio-bar'));
-    const peakHeights = [7, 13, 19, 15, 22, 22, 19, 15, 13, 7];
+    const peakScales = [0.292, 0.542, 0.792, 0.625, 0.917, 0.917, 0.792, 0.625, 0.542, 0.292];
     let transitioning = false;
 
     function startWave() {
@@ -1704,11 +1709,11 @@
       transitioning = true;
       // Burst bars up with spring
       bars.forEach(function(bar, i) {
-        bar.style.height = peakHeights[i] + 'px';
+        bar.style.transform = 'scaleY(' + peakScales[i] + ')';
       });
       // After burst, hand off to looping animation
       setTimeout(function() {
-        bars.forEach(function(bar) { bar.style.height = ''; });
+        bars.forEach(function(bar) { bar.style.transform = ''; });
         player.classList.add('playing');
         transitioning = false;
       }, 350);
@@ -1717,22 +1722,22 @@
     function stopWave() {
       if (transitioning) return;
       transitioning = true;
-      // Pin each bar at its current animated position
+      // Pin each bar at its current animated scale
       bars.forEach(function(bar) {
-        bar.style.height = getComputedStyle(bar).height;
+        bar.style.transform = getComputedStyle(bar).transform;
       });
       player.classList.remove('playing');
-      // Switch to a smooth settle easing
+      // Switch to smooth settle easing
       bars.forEach(function(bar) {
-        bar.style.transition = 'height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        bar.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
       });
-      // Settle down to 3px on next frame
+      // Settle down to static on next frame
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
-          bars.forEach(function(bar) { bar.style.height = '3px'; });
+          bars.forEach(function(bar) { bar.style.transform = 'scaleY(0.125)'; });
           setTimeout(function() {
             bars.forEach(function(bar) {
-              bar.style.height = '';
+              bar.style.transform = '';
               bar.style.transition = '';
             });
             transitioning = false;
