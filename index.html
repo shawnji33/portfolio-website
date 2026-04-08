@@ -996,56 +996,87 @@
     window.addEventListener('resize', fitHeader);
   })();
 
-  // ── Ripple background canvas ──────────────────────────
+  // ── Dot-grid ripple background ────────────────────────
   (function () {
     const canvas = document.getElementById('rippleCanvas');
     const ctx    = canvas.getContext('2d');
-    const COLORS = [
-      [99, 155, 238],   // #639BEE
-      [178, 170, 237],  // #B2AAED
-      [227, 172, 237],  // #E3ACED
-      [238, 200, 217],  // #EEC8D9
-    ];
-    const DURATION    = 6000;  // ms each ring takes to fully expand
-    const INTERVAL    = 1400;  // ms between spawns
-    const MAX_OPACITY = 0.22;  // peak ring opacity
-    const LINE_WIDTH  = 1.2;
 
-    let rings = [];
-    let lastSpawn = -INTERVAL;
+    const GRID       = 36;    // px between dots
+    const DOT_R      = 1.4;   // dot radius px
+    const BASE_A     = 0.10;  // resting dot opacity
+    const PEAK_A     = 0.55;  // dot opacity at ripple peak
+    const RIPPLE_SPD = 260;   // px/s ripple travels
+    const BAND       = 70;    // px width of lit band
+    const DURATION   = 7000;  // ms until ripple fully fades
+    const AUTO_INT   = 3200;  // ms between auto ripples
+
+    // Dot color (brand neutral)
+    const DOT_COLOR  = '99,120,180';
+
+    let W, H, cols, rows, dots = [];
+    let ripples = [];
+    let lastAuto = -AUTO_INT;
 
     function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      // Rebuild dot grid (offset so grid is centered)
+      cols = Math.ceil(W / GRID) + 2;
+      rows = Math.ceil(H / GRID) + 2;
+      const ox = ((W % GRID) / 2);
+      const oy = ((H % GRID) / 2);
+      dots = [];
+      for (let r = 0; r < rows; r++)
+        for (let c = 0; c < cols; c++)
+          dots.push({ x: ox + c * GRID, y: oy + r * GRID });
     }
     resize();
     window.addEventListener('resize', resize);
 
-    function frame(t) {
-      const W = canvas.width, H = canvas.height;
-      const cx = W / 2, cy = H * 0.38; // slightly above center
-      const maxR = Math.hypot(cx, cy) * 1.3;
+    // Spawn ripple from a point
+    function spawn(x, y, t) {
+      ripples.push({ x, y, start: t });
+    }
 
-      // Spawn
-      if (t - lastSpawn >= INTERVAL) {
-        rings.push({ start: t, color: COLORS[rings.length % COLORS.length] });
-        lastSpawn = t;
+    // Click spawns a ripple
+    window.addEventListener('click', e => {
+      spawn(e.clientX, e.clientY, performance.now());
+    });
+
+    function frame(t) {
+      // Auto-spawn from center
+      if (t - lastAuto >= AUTO_INT) {
+        spawn(W / 2, H * 0.35, t);
+        lastAuto = t;
       }
+
+      // Expire old ripples
+      ripples = ripples.filter(r => t - r.start < DURATION);
 
       ctx.clearRect(0, 0, W, H);
 
-      rings = rings.filter(ring => t - ring.start < DURATION);
-      rings.forEach(ring => {
-        const p = (t - ring.start) / DURATION; // 0→1
-        const r = p * maxR;
-        // fade in then out: peak at p=0.15, gone at p=1
-        const a = MAX_OPACITY * Math.sin(p * Math.PI) * (1 - p * 0.5);
-        const [rv, gv, bv] = ring.color;
+      // Draw each dot
+      dots.forEach(d => {
+        let extra = 0;
+        ripples.forEach(rp => {
+          const age  = t - rp.start;
+          const front = (age / 1000) * RIPPLE_SPD;       // leading edge radius
+          const dist  = Math.hypot(d.x - rp.x, d.y - rp.y);
+          const delta = dist - front;                     // negative = passed, positive = not yet
+          // Lit band: -BAND < delta < BAND*0.3
+          if (delta > -BAND && delta < BAND * 0.3) {
+            const norm  = delta > 0
+              ? 1 - delta / (BAND * 0.3)    // approaching
+              : 1 - (-delta) / BAND;        // receding
+            const fade  = 1 - age / DURATION;
+            extra = Math.max(extra, norm * fade * (PEAK_A - BASE_A));
+          }
+        });
+        const a = BASE_A + extra;
         ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${rv},${gv},${bv},${a.toFixed(3)})`;
-        ctx.lineWidth = LINE_WIDTH;
-        ctx.stroke();
+        ctx.arc(d.x, d.y, DOT_R, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${DOT_COLOR},${a.toFixed(3)})`;
+        ctx.fill();
       });
 
       requestAnimationFrame(frame);
