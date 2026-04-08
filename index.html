@@ -154,16 +154,16 @@
       will-change: transform;
     }
     .blob-1 {
-      background: radial-gradient(circle at 75% 45%, rgba(185,145,235,1) 0%, transparent 55%);
-      animation: blob1 16s ease-in-out infinite alternate;
+      background: radial-gradient(circle at 75% 45%, rgba(210,185,240,0.9) 0%, transparent 55%);
+      animation: blob1 10s ease-in-out infinite alternate;
     }
     .blob-2 {
-      background: radial-gradient(circle at 25% 75%, rgba(230,155,205,1) 0%, transparent 55%);
-      animation: blob2 20s ease-in-out infinite alternate;
+      background: radial-gradient(circle at 25% 75%, rgba(235,195,220,0.85) 0%, transparent 55%);
+      animation: blob2 13s ease-in-out infinite alternate;
     }
     .blob-3 {
-      background: radial-gradient(circle at 55% 20%, rgba(155,185,245,1) 0%, transparent 55%);
-      animation: blob3 18s ease-in-out infinite alternate;
+      background: radial-gradient(circle at 55% 20%, rgba(185,205,245,0.85) 0%, transparent 55%);
+      animation: blob3 11s ease-in-out infinite alternate;
     }
     @keyframes blob1 {
       0%   { transform: translateX(0%)    translateY(0%); }
@@ -212,8 +212,14 @@
       inset: 0;
       background-image: url('noise.webp');
       background-size: cover;
-      opacity: 0.015;
+      opacity: 0.025;
     }
+    .mesh-fade-bottom {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #ede8f8 0%, transparent 30%);
+    }
+    [data-theme="dark"] .mesh-fade-bottom { background: linear-gradient(to top, hsl(0,0%,4%) 0%, transparent 30%); }
 
     /* ─── Layout wrapper ─────────────────────────── */
     .page { position: relative; z-index: 1; }
@@ -694,6 +700,7 @@
   <div class="blob blob-3"></div>
   <div class="light-beam"></div>
   <div class="mesh-noise"></div>
+  <div class="mesh-fade-bottom"></div>
 </div>
 
 <!-- Cursor glow -->
