@@ -635,7 +635,7 @@
     .carousel::-webkit-scrollbar { display: none; }
     .carousel figure { flex-shrink: 0; scroll-snap-align: start; border-radius: 16px; overflow: hidden; position: relative; }
     .carousel .desktop { width: 1083px; height: 677px; }
-    .carousel .phone   { width: 375px;  height: 812px; }
+    .carousel .phone   { width: calc(375px * 677 / 812); height: 677px; }
     .carousel-frame-label {
       position: absolute;
       bottom: 16px;
