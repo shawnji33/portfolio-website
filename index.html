@@ -2101,32 +2101,40 @@
     const container = document.getElementById('tools');
     if (!container) return;
 
-    const RADIUS   = 80;    // activation radius in px
-    const STRENGTH = 0.38;  // fraction of distance to pull
-    const EASE     = 0.10;  // lerp factor per frame
+    const RADIUS   = 80;
+    const STRENGTH = 0.38;
+    const EASE     = 0.10;
 
     const chips = Array.from(container.querySelectorAll('.tool-chip'));
-    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0 }));
+    // cx/cy = current animated offset; tx/ty = target offset
+    // ox/oy = cached natural center in viewport coords
+    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0, ox: 0, oy: 0 }));
 
     let mouseX = -9999, mouseY = -9999;
     let rafId  = null;
     let active = false;
+
+    // Cache natural positions — must be called when chips have no transform
+    function cachePositions() {
+      chips.forEach((chip, i) => {
+        chip.style.transform = ''; // clear transform before measuring
+        const rect = chip.getBoundingClientRect();
+        state[i].ox = rect.left + rect.width  * 0.5;
+        state[i].oy = rect.top  + rect.height * 0.5;
+      });
+    }
 
     function tick() {
       let stillMoving = false;
 
       chips.forEach((chip, i) => {
         const s = state[i];
-        const rect  = chip.getBoundingClientRect();
-        const chipCx = rect.left + rect.width  * 0.5;
-        const chipCy = rect.top  + rect.height * 0.5;
-
-        const dx   = mouseX - chipCx;
-        const dy   = mouseY - chipCy;
+        const dx   = mouseX - s.ox;
+        const dy   = mouseY - s.oy;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < RADIUS) {
-          const force = (1 - dist / RADIUS) * (1 - dist / RADIUS); // quadratic falloff
+          const force = (1 - dist / RADIUS) * (1 - dist / RADIUS);
           s.tx = dx * force * STRENGTH;
           s.ty = dy * force * STRENGTH;
         } else {
@@ -2146,7 +2154,6 @@
         rafId = requestAnimationFrame(tick);
       } else {
         rafId = null;
-        // snap fully to rest when settled
         chips.forEach((chip, i) => {
           state[i].cx = state[i].cy = 0;
           chip.style.transform = '';
@@ -2155,6 +2162,10 @@
     }
 
     function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
+
+    container.addEventListener('mouseenter', () => {
+      cachePositions(); // measure natural positions before any animation
+    }, { passive: true });
 
     container.addEventListener('mousemove', e => {
       mouseX = e.clientX; mouseY = e.clientY;
@@ -2165,7 +2176,11 @@
     container.addEventListener('mouseleave', () => {
       mouseX = -9999; mouseY = -9999;
       active = false;
-      startLoop(); // let chips spring back
+      startLoop();
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      if (!active) cachePositions();
     }, { passive: true });
   })();
 
