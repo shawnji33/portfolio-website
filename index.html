@@ -760,9 +760,8 @@
       position: relative;
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      will-change: transform;
     }
-    .tool-chip:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .tool-chip:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
     .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
     .tool-chip-cursor { overflow: visible; width: 62px !important; }
     .tool-chip-cursor img { width: 68px !important; height: 68px !important; position: absolute; top: -5%; left: -5%; }
@@ -2098,60 +2097,83 @@
 
   // ── Tool chips magnetic pull ──────────────────────────
   (function () {
-    const chips = Array.from(document.querySelectorAll('#tools .tool-chip'));
+    const container = document.getElementById('tools');
+    if (!container) return;
+    const chips = Array.from(container.querySelectorAll('.tool-chip'));
     if (!chips.length) return;
 
-    const RADIUS = 90, STRENGTH = 0.35, EASE = 0.12;
-    // x/y = current animated offset; tx/ty = target; nx/ny = natural center in page coords
-    const p = chips.map(() => ({ x:0, y:0, tx:0, ty:0, nx:0, ny:0 }));
-    let px = -9999, py = -9999, raf = null;
+    const RADIUS   = 80;   // px — activation radius
+    const STRENGTH = 0.8;  // pull intensity
+    const EASE     = 0.15; // lerp factor per frame
 
-    function measure() {
-      chips.forEach((c, i) => {
-        c.style.transform = '';
-        p[i].x = p[i].y = p[i].tx = p[i].ty = 0;
-        let el = c, nx = 0, ny = 0;
-        while (el) { nx += el.offsetLeft; ny += el.offsetTop; el = el.offsetParent; }
-        p[i].nx = nx + c.offsetWidth  * 0.5;
-        p[i].ny = ny + c.offsetHeight * 0.5;
+    // Per-chip state
+    const cur = chips.map(() => ({ x: 0, y: 0 })); // current animated offset
+    const tgt = chips.map(() => ({ x: 0, y: 0 })); // target offset
+    let centers = [];  // natural viewport centers, snapshotted on mouseenter
+    let mx = 0, my = 0, active = false, raf = null;
+
+    function snapshot() {
+      // Reset all inline transforms so getBoundingClientRect gives natural position
+      chips.forEach(c => c.style.transform = 'none');
+      // Force layout flush
+      void container.offsetWidth;
+      centers = chips.map(c => {
+        const r = c.getBoundingClientRect();
+        return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 };
       });
+      // Remove the 'none' so CSS can apply naturally again until first frame
+      chips.forEach(c => c.style.transform = '');
     }
 
-    function frame() {
+    function tick() {
       let busy = false;
-      chips.forEach((c, i) => {
-        const s = p[i];
-        const dx = px - s.nx, dy = py - s.ny;
+      chips.forEach((chip, i) => {
+        const cx = centers[i] ? centers[i].x : 0;
+        const cy = centers[i] ? centers[i].y : 0;
+        const dx = (active ? mx : -9999) - cx;
+        const dy = (active ? my : -9999) - cy;
         const d  = Math.hypot(dx, dy);
-        if (px > -100 && d < RADIUS) {
+
+        if (active && d < RADIUS) {
           const f = (1 - d / RADIUS) ** 2;
-          s.tx = dx * f * STRENGTH;
-          s.ty = dy * f * STRENGTH;
-        } else { s.tx = s.ty = 0; }
-        s.x += (s.tx - s.x) * EASE;
-        s.y += (s.ty - s.y) * EASE;
-        c.style.transform = `translate(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px)`;
-        if (Math.abs(s.x - s.tx) > 0.05 || Math.abs(s.y - s.ty) > 0.05) busy = true;
+          tgt[i].x = dx * f * STRENGTH;
+          tgt[i].y = dy * f * STRENGTH;
+        } else {
+          tgt[i].x = tgt[i].y = 0;
+        }
+
+        cur[i].x += (tgt[i].x - cur[i].x) * EASE;
+        cur[i].y += (tgt[i].y - cur[i].y) * EASE;
+
+        chip.style.transform = `translate(${cur[i].x.toFixed(2)}px, ${cur[i].y.toFixed(2)}px)`;
+
+        if (Math.abs(cur[i].x - tgt[i].x) > 0.05 || Math.abs(cur[i].y - tgt[i].y) > 0.05) busy = true;
       });
-      raf = (busy || px > -100) ? requestAnimationFrame(frame) : null;
-      if (!raf) chips.forEach((c, i) => { p[i].x = p[i].y = 0; c.style.transform = ''; });
+
+      if (active || busy) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = null;
+        chips.forEach(c => c.style.transform = '');
+      }
     }
 
-    function start() { if (!raf) raf = requestAnimationFrame(frame); }
+    function start() { if (!raf) raf = requestAnimationFrame(tick); }
 
-    // Measure immediately — tools bar is at top, unaffected by image loads
-    measure();
-    window.addEventListener('load',   measure); // re-measure after fonts settle
-    window.addEventListener('resize', measure);
-
-    document.addEventListener('mousemove', e => {
-      if (p[0].nx === 0) measure(); // fallback if measure fired too early
-      px = e.pageX; py = e.pageY;
+    container.addEventListener('mouseenter', () => {
+      snapshot();
+      active = true;
       start();
+    });
+
+    container.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
     }, { passive: true });
 
-    document.addEventListener('mouseleave', () => {
-      px = py = -9999; start();
+    container.addEventListener('mouseleave', () => {
+      active = false;
+      start(); // let chips spring back
     });
   })();
 
