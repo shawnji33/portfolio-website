@@ -1714,6 +1714,7 @@
       requestAnimationFrame(() => { badge.style.transition = ''; });
     }
     fitHeader();
+    document.fonts.ready.then(fitHeader);
     window.addEventListener('resize', fitHeader);
   })();
 
