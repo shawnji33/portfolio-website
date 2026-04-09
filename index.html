@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shawn Ji — Product Designer</title>
-<link rel="preconnect" href="https://api.fontshare.com" />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -64,8 +64,8 @@
 
     /* ─── Base ───────────────────────────────────── */
     html { height: 100%; background: #EAECF0; transition: background-color 0.7s ease; }
-    html.tint-relayfi { background-color: #F3F6D7; }
-    body.tint-relayfi { background-color: #F3F6D7 !important; }
+    html.tint-relayfi { background-color: #EFF4CA; }
+    body.tint-relayfi { background-color: #EFF4CA !important; }
     [data-theme="dark"] html { background: hsl(240,15%,8%); }
     body {
       min-height: 100%;
@@ -144,7 +144,8 @@
       pointer-events: none;
       overflow: hidden;
       background: #EAECF0;
-      transition: background-color 0.7s ease;
+      contain: strict;
+      will-change: background-color;
     }
     [data-theme="dark"] .mesh-bg { background: hsl(240,15%,8%); }
 
@@ -842,17 +843,17 @@
     .sp-lum-glow1 { filter: blur(2px); opacity: 0.25; }
     .sp-lum-glow2 { filter: blur(6px); opacity: 0.12; }
     .sp-lum-shine {
-      background: linear-gradient(90deg, transparent 0%, transparent 20%, rgba(220,230,255,0.9) 50%, transparent 80%, transparent 100%);
-      background-size: 300% 100%;
+      background: linear-gradient(90deg, transparent 44%, rgba(220,230,255,0.75) 50%, transparent 56%);
+      background-size: 600% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      animation: sp-lum-shine 3.5s linear infinite;
+      animation: sp-lum-shine 6s linear infinite;
     }
     @keyframes sp-lum-shine {
-      0%   { background-position: 150% center; }
-      100% { background-position: -50% center; }
+      0%   { background-position: 200% center; }
+      100% { background-position: -100% center; }
     }
 
     /* ─── Project: RelayFi ──────────────────────── */
@@ -897,13 +898,15 @@
       overflow: hidden;
       position: relative;
       flex-shrink: 0;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
     .rf-scene {
       width: 2139px;
       height: 1342px;
       transform: scale(0.499);
       transform-origin: top left;
-      background: #F2F8D4;
+      background: rgba(255,255,255,0.40);
       padding: 60px;
       box-sizing: border-box;
       display: flex;
@@ -937,7 +940,9 @@
     }
     .rf-graph-wrap, .rf-tx-wrap { border-radius: 12px; overflow: hidden; flex-shrink: 0; line-height: 0; }
     .proj-card {
-      background: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.40);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       border: 1px solid rgba(0,0,0,0.06);
       border-radius: 16px;
       box-shadow: 0 2px 8px rgba(10,13,18,0.03);
@@ -951,16 +956,31 @@
       text-decoration: none;
     }
     .proj-name-link {
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.35s cubic-bezier(.25,.46,.45,.94), border-color 0.35s cubic-bezier(.25,.46,.45,.94);
       cursor: pointer;
+      will-change: transform;
     }
-    .proj-name-link:hover { transform: scale(1.015); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .proj-name-link:hover {
+      transform: scale(1.015);
+      box-shadow: 0 6px 20px rgba(53,90,62,0.14);
+      background: rgba(53,90,62,0.10);
+      border-color: rgba(53,90,62,0.15);
+    }
     .proj-name-link:active { transform: scale(0.97); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: transform 0.08s ease, box-shadow 0.08s ease; }
     .proj-project-title {
       font-family: var(--font-display);
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 700;
       color: #355a3e;
+      letter-spacing: -0.5px;
+      line-height: normal;
+      margin: 0;
+    }
+    .proj-project-year {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(53,90,62,0.67);
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
@@ -1021,7 +1041,7 @@
       font-family: var(--font-regular);
       font-size: 20px;
       font-weight: 400;
-      color: rgba(38,42,0,0.6);
+      color: rgba(38,42,0,0.67);
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
@@ -1344,7 +1364,10 @@
     <!-- Description row -->
     <div class="proj-desc-row">
       <a href="https://relayfi.com/" target="_blank" rel="noopener noreferrer" class="proj-card proj-name proj-name-link">
-        <p class="proj-project-title">RelayFi</p>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <p class="proj-project-title">RelayFi</p>
+          <p class="proj-project-year">2023 - 2024</p>
+        </div>
         <div style="display:flex;justify-content:flex-end;width:100%;">
           <div style="width:32px;height:32px;border-radius:999px;background:rgba(213,226,123,0.3);border:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1377,7 +1400,7 @@
           <!-- Left: Main Content (1166px) -->
           <div class="rf-main">
             <div class="rf-chart-wrap">
-              <img src="relayfi-img1.png" style="width:1166px;height:auto;display:block;" />
+              <img src="relayfi-img1.png" style="width:1166px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
             <div class="rf-sankey">
               <!-- Transfers from -->
@@ -1439,11 +1462,11 @@
             </div>
             <!-- Cash flow graph -->
             <div class="rf-graph-wrap">
-              <img src="relayfi-graph.png" style="width:813px;height:auto;display:block;" />
+              <img src="relayfi-graph.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
             <!-- Transactions table -->
             <div class="rf-tx-wrap">
-              <img src="relayfi-transactions.png" style="width:813px;height:auto;display:block;" />
+              <img src="relayfi-transactions.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
@@ -1764,22 +1787,48 @@
     const section = document.getElementById('project-relayfi');
     const meshBg  = document.querySelector('.mesh-bg');
     if (!section || !meshBg) return;
-    const DEFAULT = '#EAECF0';
-    const TINT    = '#F3F6D7';
-    function getSectionTop() {
+
+    const C0 = [234, 236, 240];
+    const C1 = [239, 244, 202];
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    // Cache layout measurements — invalidate on resize
+    let cachedTop = 0, cachedHeight = 0;
+    function measureSection() {
       let top = 0, el = section;
       while (el) { top += el.offsetTop; el = el.offsetParent; }
-      return top;
+      cachedTop    = top;
+      cachedHeight = section.offsetHeight;
     }
+
     function updateBg() {
-      const sectionTop    = getSectionTop();
-      const sectionBottom = sectionTop + section.offsetHeight;
-      const scrollMid     = window.scrollY + window.innerHeight * 0.5;
-      const active        = scrollMid >= sectionTop && scrollMid < sectionBottom;
-      meshBg.style.backgroundColor = active ? TINT : DEFAULT;
+      const vh = window.innerHeight;
+      const sectionBottom = cachedTop + cachedHeight;
+      const entryStart = vh * 0.70, entryEnd = vh * 0.50;
+      const exitStart  = vh * 0.40, exitEnd  = vh * 0.10;
+      const topInView    = cachedTop    - window.scrollY;
+      const bottomInView = sectionBottom - window.scrollY;
+      const tIn  = clamp((entryStart - topInView)    / (entryStart - entryEnd), 0, 1);
+      const tOut = clamp((bottomInView - exitEnd)     / (exitStart  - exitEnd),  0, 1);
+      const t = Math.min(tIn, tOut);
+      const r = Math.round(lerp(C0[0], C1[0], t));
+      const g = Math.round(lerp(C0[1], C1[1], t));
+      const b = Math.round(lerp(C0[2], C1[2], t));
+      meshBg.style.backgroundColor = `rgb(${r},${g},${b})`;
     }
-    document.addEventListener('scroll', updateBg, { passive: true, capture: true });
-    window.addEventListener('load', updateBg);
+
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) { requestAnimationFrame(() => { updateBg(); ticking = false; }); ticking = true; }
+    }
+
+    measureSection();
+    window.addEventListener('resize', () => { measureSection(); updateBg(); });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    window.addEventListener('load', () => { measureSection(); updateBg(); });
+    window.addEventListener('resize', updateBg);
     updateBg();
   })();
 
@@ -1963,33 +2012,24 @@
   // ── Progressive scroll blur reveal ───────────────────
   (function () {
     const SELECTOR = '.cell, .project, .carousel, .actions-open, .actions-linkedin, .actions-audio, .actions-ticker, #viewmore, footer, .proj-desc-row, .proj-gallery-row, .sp-container, .video-cta-card';
-    const CLEAR_ZONE  = 0.70;
+    const CLEAR_ZONE  = 0.67;
     const BLUR_ZONE   = 1.05;
-    const MIN_OPACITY = 0.75;
+    const MAX_BLUR    = 8;
+    const MIN_OPACITY = 0.80;
 
-    // 3 stacked backdrop-filter layers — each covers a lower band, creating gradient blur
-    const LAYERS = [
-      { blur: 3,  mask: 'linear-gradient(to bottom, transparent 0%, black 100%)' },
-      { blur: 7,  mask: 'linear-gradient(to bottom, transparent 40%, black 100%)' },
-      { blur: 13, mask: 'linear-gradient(to bottom, transparent 70%, black 100%)' },
-    ];
-
+    // Inject a gradient overlay into each element that fades from transparent (top)
+    // to a frosted tint (bottom), giving a progressive blur appearance on top of filter:blur()
     function initEl(el) {
       if (el.dataset.blurReady) return;
       el.dataset.blurReady = '1';
       const cs = getComputedStyle(el);
       if (cs.position === 'static') el.style.position = 'relative';
-      LAYERS.forEach(({ blur, mask }) => {
-        const d = document.createElement('div');
-        d.className = 'pgblur-layer';
-        d.style.cssText = [
-          'position:absolute', 'inset:0', 'pointer-events:none', 'z-index:100',
-          `backdrop-filter:blur(${blur}px)`, `-webkit-backdrop-filter:blur(${blur}px)`,
-          `-webkit-mask-image:${mask}`, `mask-image:${mask}`,
-          'opacity:0', 'border-radius:inherit', 'will-change:opacity'
-        ].join(';');
-        el.appendChild(d);
-      });
+      const d = document.createElement('div');
+      d.className = 'pgblur-layer';
+      d.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:100;' +
+        'background:linear-gradient(to bottom,transparent 0%,rgba(234,236,240,0.55) 100%);' +
+        'border-radius:inherit;opacity:0;will-change:opacity;';
+      el.appendChild(d);
     }
 
     function updateBlur() {
@@ -2001,11 +2041,12 @@
 
       document.querySelectorAll(SELECTOR).forEach(el => {
         initEl(el);
-        const layers = el.querySelectorAll('.pgblur-layer');
+        const overlay = el.querySelector(':scope > .pgblur-layer');
 
         if (nearBottom) {
+          el.style.filter  = '';
           el.style.opacity = '';
-          layers.forEach(l => l.style.opacity = '0');
+          if (overlay) overlay.style.opacity = '0';
           return;
         }
 
@@ -2013,8 +2054,10 @@
         const t = top <= clearPx ? 0 : top >= blurPx ? 1
                   : (top - clearPx) / (blurPx - clearPx);
 
+        // Uniform blur on the element + gradient overlay that intensifies toward bottom
+        el.style.filter  = t === 0 ? '' : `blur(${(t * MAX_BLUR).toFixed(1)}px)`;
         el.style.opacity = t === 0 ? '' : (1 - t * (1 - MIN_OPACITY)).toFixed(3);
-        layers.forEach(l => l.style.opacity = t === 0 ? '0' : t.toFixed(3));
+        if (overlay) overlay.style.opacity = t === 0 ? '0' : t.toFixed(3);
       });
     }
 
