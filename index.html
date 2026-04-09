@@ -879,7 +879,10 @@
       display: flex;
       gap: 4px;
       height: 670px;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    .proj-gallery-row::-webkit-scrollbar { display: none; }
     .proj-card {
       background: rgba(255,255,255,0.6);
       border: 1px solid rgba(0,0,0,0.06);
