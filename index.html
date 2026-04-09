@@ -985,9 +985,8 @@
       width: 100%;
       border-radius: 28px;
       overflow: hidden;
-      min-height: 120px;
+      aspect-ratio: 16 / 7;
       background: #0a0a0a;
-      box-sizing: border-box;
     }
     .video-cta-card video {
       width: 100%;
@@ -1625,25 +1624,6 @@
     updateBg();
   })();
 
-  // ── Video CTA height ──────────────────────────────────
-  (function () {
-    const section = document.getElementById('video-cta');
-    const container = section && section.querySelector('.video-cta-card');
-    if (!section || !container) return;
-    function getAbsoluteTop(el) {
-      let top = 0;
-      while (el) { top += el.offsetTop; el = el.offsetParent; }
-      return top;
-    }
-    function fitHeight() {
-      container.style.minHeight = '';
-      const absTop = getAbsoluteTop(section);
-      const remaining = window.innerHeight - absTop - 8;
-      container.style.minHeight = Math.max(120, remaining) + 'px';
-    }
-    fitHeight();
-    window.addEventListener('resize', fitHeight);
-  })();
 
   // ── Header fill ───────────────────────────────────────
   (function () {
