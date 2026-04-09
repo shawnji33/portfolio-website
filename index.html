@@ -1041,20 +1041,28 @@
       font-family: var(--font-regular);
       font-size: 20px;
       font-weight: 400;
-      color: rgba(38,42,0,0.67);
+      color: rgba(38,42,0,0.40);
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
       display: flex;
       align-items: baseline;
       gap: 8px;
+      transition: color 0.2s ease;
+      cursor: default;
     }
     .proj-skills p::before {
       content: "○";
       font-size: 15px;
       font-weight: 700;
       flex-shrink: 0;
-      opacity: 0.7;
+      transition: content 0s, transform 0.15s ease;
+    }
+    .proj-skills p:hover {
+      color: rgba(38,42,0,0.70);
+    }
+    .proj-skills p:hover::before {
+      content: "●";
     }
     .proj-img {
       flex: 1 1 0;
