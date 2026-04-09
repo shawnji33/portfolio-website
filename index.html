@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Mono:wght@400&display=swap" />
+  <link rel="stylesheet" href="https://unpkg.com/lenis@latest/dist/lenis.css" />
   <style>
     /* ─── Reset ─────────────────────────────────── */
     a,body,div,figure,h1,h2,h3,h4,h5,h6,html,li,main,nav,ol,p,section,ul {
@@ -2382,6 +2383,23 @@
       }
     });
   })();
+</script>
+
+
+<script src="https://unpkg.com/lenis@latest/dist/lenis.min.js"></script>
+<script>
+  const lenis = new Lenis({
+    duration: 0.9,
+    easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+    smoothWheel: true,
+    touch: false
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
 </script>
 
 </body>
