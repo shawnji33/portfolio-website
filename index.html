@@ -2177,6 +2177,80 @@
     });
   })();
 
+  // ── RelayFi card magnetic pull ───────────────────────
+  (function () {
+    const outer = document.querySelector('.rf-scene-outer');
+    if (!outer) return;
+    // rf-scene has transform:scale(0.499); divs inside are in that local space.
+    // To move X viewport pixels we must set translate(X/0.499) in local px.
+    const SCENE_SCALE = 0.499;
+    const RADIUS   = 200;  // viewport px activation radius
+    const STRENGTH = 0.30; // pull multiplier
+    const EASE     = 0.10; // lerp per frame
+
+    const items = Array.from(outer.querySelectorAll(
+      '.rf-chart-wrap, .rf-sankey, .rf-banner, .rf-graph-wrap, .rf-tx-wrap'
+    ));
+    if (!items.length) return;
+
+    const cur = items.map(() => ({ x: 0, y: 0 }));
+    const tgt = items.map(() => ({ x: 0, y: 0 }));
+    let centers = [];
+    let mx = 0, my = 0, active = false, raf = null;
+
+    function snapshot() {
+      items.forEach(el => el.style.transform = 'none');
+      void outer.offsetWidth;
+      centers = items.map(el => {
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width * 0.5, y: r.top + r.height * 0.5 };
+      });
+      items.forEach(el => el.style.transform = '');
+    }
+
+    function tick() {
+      let busy = false;
+      items.forEach((el, i) => {
+        const cx = centers[i] ? centers[i].x : 0;
+        const cy = centers[i] ? centers[i].y : 0;
+        const dx = (active ? mx : -9999) - cx;
+        const dy = (active ? my : -9999) - cy;
+        const d  = Math.hypot(dx, dy);
+
+        if (active && d < RADIUS) {
+          const f = (1 - d / RADIUS) ** 2;
+          tgt[i].x = dx * f * STRENGTH;
+          tgt[i].y = dy * f * STRENGTH;
+        } else {
+          tgt[i].x = tgt[i].y = 0;
+        }
+
+        cur[i].x += (tgt[i].x - cur[i].x) * EASE;
+        cur[i].y += (tgt[i].y - cur[i].y) * EASE;
+
+        // Convert viewport-space offset to element's local coordinate space
+        const tx = cur[i].x / SCENE_SCALE;
+        const ty = cur[i].y / SCENE_SCALE;
+        el.style.transform = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px)`;
+
+        if (Math.abs(cur[i].x - tgt[i].x) > 0.05 || Math.abs(cur[i].y - tgt[i].y) > 0.05) busy = true;
+      });
+
+      if (active || busy) {
+        raf = requestAnimationFrame(tick);
+      } else {
+        raf = null;
+        items.forEach(el => el.style.transform = '');
+      }
+    }
+
+    function start() { if (!raf) raf = requestAnimationFrame(tick); }
+
+    outer.addEventListener('mouseenter', () => { snapshot(); active = true; start(); });
+    outer.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    outer.addEventListener('mouseleave', () => { active = false; start(); });
+  })();
+
   // ── Carousel scroll ───────────────────────────────────
   function scrollCarousel(id, dir) {
     const el = document.getElementById(id);
