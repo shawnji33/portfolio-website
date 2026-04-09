@@ -2198,25 +2198,16 @@
 
     items.forEach(el => { el.style.transition = 'transform 0.25s cubic-bezier(.25,.46,.45,.94)'; });
 
-    let centers = [];
-
-    outer.addEventListener('mouseenter', () => {
-      centers = items.map(el => {
-        const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-      });
-    });
-
     outer.addEventListener('mousemove', e => {
-      if (!centers.length) return;
       const mx = e.clientX, my = e.clientY;
-      items.forEach((el, i) => {
-        const dx = mx - centers[i].x;
-        const dy = my - centers[i].y;
+      items.forEach(el => {
+        // Read live position each move — stays correct after gallery scroll
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const dx = mx - cx, dy = my - cy;
         const d  = Math.hypot(dx, dy);
         if (d < RADIUS) {
           const f = 1 - d / RADIUS;
-          // Negative: push AWAY from cursor instead of toward it
           const tx = (-dx * f * STRENGTH / SCENE_SCALE).toFixed(2);
           const ty = (-dy * f * STRENGTH / SCENE_SCALE).toFixed(2);
           el.style.transform = `translate(${tx}px,${ty}px)`;
@@ -2227,7 +2218,6 @@
     });
 
     outer.addEventListener('mouseleave', () => {
-      centers = [];
       items.forEach(el => { el.style.transform = ''; });
     });
   })();
@@ -2244,27 +2234,19 @@
 
     items.forEach(el => { el.style.transition = 'transform 0.25s cubic-bezier(.25,.46,.45,.94)'; });
 
-    let centers = [];
-
-    outer.addEventListener('mouseenter', () => {
-      centers = items.map(el => {
-        const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-      });
-    });
-
     outer.addEventListener('mousemove', e => {
-      if (!centers.length) return;
       const mx = e.clientX, my = e.clientY;
-      items.forEach((el, i) => {
-        const dx = mx - centers[i].x;
-        const dy = my - centers[i].y;
+      items.forEach(el => {
+        // Read live position each move — stays correct after gallery scroll
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        const dx = mx - cx, dy = my - cy;
         const d  = Math.hypot(dx, dy);
         if (d < RADIUS) {
           const f = 1 - d / RADIUS;
-          const tx = (dx * f * STRENGTH) / SCENE_SCALE;
-          const ty = (dy * f * STRENGTH) / SCENE_SCALE;
-          el.style.transform = `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px)`;
+          const tx = (dx * f * STRENGTH / SCENE_SCALE).toFixed(2);
+          const ty = (dy * f * STRENGTH / SCENE_SCALE).toFixed(2);
+          el.style.transform = `translate(${tx}px,${ty}px)`;
         } else {
           el.style.transform = '';
         }
@@ -2272,7 +2254,6 @@
     });
 
     outer.addEventListener('mouseleave', () => {
-      centers = [];
       items.forEach(el => { el.style.transform = ''; });
     });
   })();
