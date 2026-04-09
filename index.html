@@ -2211,6 +2211,11 @@
 
     outer.addEventListener('mouseenter', cache);
 
+    // Page scroll (including Lenis) invalidates cached centers — re-cache on
+    // the next mouseenter. Without this, entering while Lenis is mid-animation
+    // caches stale positions and breaks the effect.
+    window.addEventListener('scroll', () => { centers = []; }, { passive: true });
+
     // When gallery scrolls, shift cached centers by the horizontal delta
     // instead of re-reading the DOM — zero layout work
     const gallery = document.querySelector('.proj-gallery-row');
@@ -2225,9 +2230,8 @@
 
     function tick() {
       rafId = null;
-      if (!centers.length) return;
-      // All reads are from the cache — zero forced reflows
-      // All writes happen together in one batch
+      // Re-cache if centers were invalidated by a scroll while cursor was inside
+      if (!centers.length) { cache(); }
       items.forEach((el, i) => {
         const dx = mx - centers[i].x;
         const dy = my - centers[i].y;
