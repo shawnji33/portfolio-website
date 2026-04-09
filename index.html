@@ -2098,82 +2098,58 @@
 
   // ── Tool chips magnetic pull ──────────────────────────
   (function () {
-    const container = document.getElementById('tools');
-    if (!container) return;
+    const chips = Array.from(document.querySelectorAll('#tools .tool-chip'));
+    if (!chips.length) return;
 
-    const RADIUS   = 80;
-    const STRENGTH = 0.38;
-    const EASE     = 0.10;
+    const RADIUS = 90, STRENGTH = 0.35, EASE = 0.12;
+    // x/y = current animated offset; tx/ty = target; nx/ny = natural center in page coords
+    const p = chips.map(() => ({ x:0, y:0, tx:0, ty:0, nx:0, ny:0 }));
+    let px = -9999, py = -9999, raf = null;
 
-    const chips = Array.from(container.querySelectorAll('.tool-chip'));
-    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0 }));
-
-    let mouseX = -9999, mouseY = -9999;
-    let rafId  = null;
-    let near   = false; // is cursor near the tools section?
-
-    function tick() {
-      let stillMoving = false;
-
-      chips.forEach((chip, i) => {
-        const s = state[i];
-        // Derive natural center by subtracting current animated offset from live rect
-        const rect = chip.getBoundingClientRect();
-        const naturalCx = rect.left + rect.width  * 0.5 - s.cx;
-        const naturalCy = rect.top  + rect.height * 0.5 - s.cy;
-
-        const dx   = mouseX - naturalCx;
-        const dy   = mouseY - naturalCy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (near && dist < RADIUS) {
-          const force = (1 - dist / RADIUS) * (1 - dist / RADIUS);
-          s.tx = dx * force * STRENGTH;
-          s.ty = dy * force * STRENGTH;
-        } else {
-          s.tx = 0;
-          s.ty = 0;
-        }
-
-        s.cx += (s.tx - s.cx) * EASE;
-        s.cy += (s.ty - s.cy) * EASE;
-
-        chip.style.transform = `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)`;
-
-        if (Math.abs(s.cx - s.tx) > 0.05 || Math.abs(s.cy - s.ty) > 0.05) stillMoving = true;
+    function measure() {
+      chips.forEach((c, i) => {
+        c.style.transform = '';
+        p[i].x = p[i].y = p[i].tx = p[i].ty = 0;
+        let el = c, nx = 0, ny = 0;
+        while (el) { nx += el.offsetLeft; ny += el.offsetTop; el = el.offsetParent; }
+        p[i].nx = nx + c.offsetWidth  * 0.5;
+        p[i].ny = ny + c.offsetHeight * 0.5;
       });
-
-      if (near || stillMoving) {
-        rafId = requestAnimationFrame(tick);
-      } else {
-        rafId = null;
-        chips.forEach((chip, i) => {
-          state[i].cx = state[i].cy = 0;
-          chip.style.transform = '';
-        });
-      }
     }
 
-    function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
+    function frame() {
+      let busy = false;
+      chips.forEach((c, i) => {
+        const s = p[i];
+        const dx = px - s.nx, dy = py - s.ny;
+        const d  = Math.hypot(dx, dy);
+        if (px > -100 && d < RADIUS) {
+          const f = (1 - d / RADIUS) ** 2;
+          s.tx = dx * f * STRENGTH;
+          s.ty = dy * f * STRENGTH;
+        } else { s.tx = s.ty = 0; }
+        s.x += (s.tx - s.x) * EASE;
+        s.y += (s.ty - s.y) * EASE;
+        c.style.transform = `translate(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px)`;
+        if (Math.abs(s.x - s.tx) > 0.05 || Math.abs(s.y - s.ty) > 0.05) busy = true;
+      });
+      raf = (busy || px > -100) ? requestAnimationFrame(frame) : null;
+      if (!raf) chips.forEach((c, i) => { p[i].x = p[i].y = 0; c.style.transform = ''; });
+    }
 
-    // Use document-level tracking — reliable regardless of element boundaries
+    function start() { if (!raf) raf = requestAnimationFrame(frame); }
+
+    window.addEventListener('load',   measure);
+    window.addEventListener('resize', measure);
+
     document.addEventListener('mousemove', e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      // Check if cursor is anywhere near the tools section
-      const rect = container.getBoundingClientRect();
-      const pad  = RADIUS;
-      near = mouseX >= rect.left - pad && mouseX <= rect.right  + pad &&
-             mouseY >= rect.top  - pad && mouseY <= rect.bottom + pad;
-
-      startLoop();
+      px = e.pageX; py = e.pageY;
+      start();
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
-      near = false; mouseX = -9999; mouseY = -9999;
-      startLoop();
-    }, { passive: true });
+      px = py = -9999; start();
+    });
   })();
 
   // ── Carousel scroll ───────────────────────────────────
