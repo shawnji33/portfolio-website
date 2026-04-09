@@ -2184,79 +2184,79 @@
     applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
 
-  // ── RelayFi dashboard repulsion (each card pushes away from cursor) ──
-  (function () {
-    const outer = document.querySelector('.rf-scene-outer');
+  // ── Shared magnetic effect factory ──────────────────────
+  // Cache centers on mouseenter; track gallery scroll delta to keep them
+  // accurate without re-reading getBoundingClientRect every mousemove frame.
+  // RAF throttle ensures at most one DOM write per animation frame.
+  function makeMagnet(outerSel, itemsSel, sceneScale, radius, strength, repel) {
+    const outer = document.querySelector(outerSel);
     if (!outer) return;
-    const SCENE_SCALE = 0.499;
-    const RADIUS = 280, STRENGTH = 0.18;
-
-    const items = Array.from(outer.querySelectorAll(
-      '.rf-chart-wrap, .rf-sankey, .rf-banner, .rf-graph-wrap, .rf-tx-wrap'
-    ));
+    const items = Array.from(outer.querySelectorAll(itemsSel));
     if (!items.length) return;
 
     items.forEach(el => { el.style.transition = 'transform 0.25s cubic-bezier(.25,.46,.45,.94)'; });
 
-    outer.addEventListener('mousemove', e => {
-      const mx = e.clientX, my = e.clientY;
-      items.forEach(el => {
-        // Read live position each move — stays correct after gallery scroll
+    let centers = [];
+    let rafId = null;
+    let mx = 0, my = 0;
+
+    // Cache natural centers (called before any transforms are active)
+    function cache() {
+      centers = items.map(el => {
         const r = el.getBoundingClientRect();
-        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        const dx = mx - cx, dy = my - cy;
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      });
+    }
+
+    outer.addEventListener('mouseenter', cache);
+
+    // When gallery scrolls, shift cached centers by the horizontal delta
+    // instead of re-reading the DOM — zero layout work
+    const gallery = document.querySelector('.proj-gallery-row');
+    if (gallery) {
+      let lastScroll = gallery.scrollLeft;
+      gallery.addEventListener('scroll', () => {
+        const delta = gallery.scrollLeft - lastScroll;
+        lastScroll = gallery.scrollLeft;
+        centers = centers.map(c => ({ x: c.x - delta, y: c.y }));
+      }, { passive: true });
+    }
+
+    function tick() {
+      rafId = null;
+      if (!centers.length) return;
+      // All reads are from the cache — zero forced reflows
+      // All writes happen together in one batch
+      items.forEach((el, i) => {
+        const dx = mx - centers[i].x;
+        const dy = my - centers[i].y;
         const d  = Math.hypot(dx, dy);
-        if (d < RADIUS) {
-          const f = 1 - d / RADIUS;
-          const tx = (-dx * f * STRENGTH / SCENE_SCALE).toFixed(2);
-          const ty = (-dy * f * STRENGTH / SCENE_SCALE).toFixed(2);
+        if (d < radius) {
+          const f = 1 - d / radius;
+          const sign = repel ? -1 : 1;
+          const tx = (sign * dx * f * strength / sceneScale).toFixed(2);
+          const ty = (sign * dy * f * strength / sceneScale).toFixed(2);
           el.style.transform = `translate(${tx}px,${ty}px)`;
         } else {
           el.style.transform = '';
         }
       });
-    });
-
-    outer.addEventListener('mouseleave', () => {
-      items.forEach(el => { el.style.transform = ''; });
-    });
-  })();
-
-  // ── RelayFi collage magnetic pull ────────────────────
-  (function () {
-    const outer = document.querySelector('.rf2-scene-outer');
-    if (!outer) return;
-    const SCENE_SCALE = 0.5496;
-    const RADIUS = 280, STRENGTH = 0.18;
-
-    const items = Array.from(outer.querySelectorAll('.rf2-item'));
-    if (!items.length) return;
-
-    items.forEach(el => { el.style.transition = 'transform 0.25s cubic-bezier(.25,.46,.45,.94)'; });
+    }
 
     outer.addEventListener('mousemove', e => {
-      const mx = e.clientX, my = e.clientY;
-      items.forEach(el => {
-        // Read live position each move — stays correct after gallery scroll
-        const r = el.getBoundingClientRect();
-        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        const dx = mx - cx, dy = my - cy;
-        const d  = Math.hypot(dx, dy);
-        if (d < RADIUS) {
-          const f = 1 - d / RADIUS;
-          const tx = (dx * f * STRENGTH / SCENE_SCALE).toFixed(2);
-          const ty = (dy * f * STRENGTH / SCENE_SCALE).toFixed(2);
-          el.style.transform = `translate(${tx}px,${ty}px)`;
-        } else {
-          el.style.transform = '';
-        }
-      });
-    });
+      mx = e.clientX; my = e.clientY;
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    }, { passive: true });
 
     outer.addEventListener('mouseleave', () => {
+      centers = [];
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
       items.forEach(el => { el.style.transform = ''; });
     });
-  })();
+  }
+
+  makeMagnet('.rf-scene-outer',  '.rf-chart-wrap, .rf-sankey, .rf-banner, .rf-graph-wrap, .rf-tx-wrap', 0.499,  280, 0.18, true);
+  makeMagnet('.rf2-scene-outer', '.rf2-item', 0.5496, 280, 0.18, false);
 
   // ── Carousel scroll ───────────────────────────────────
   function scrollCarousel(id, dir) {
