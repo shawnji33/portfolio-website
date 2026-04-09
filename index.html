@@ -2106,34 +2106,27 @@
     const EASE     = 0.10;
 
     const chips = Array.from(container.querySelectorAll('.tool-chip'));
-    // cx/cy = current animated offset; tx/ty = target offset
-    // ox/oy = cached natural center in viewport coords
-    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0, ox: 0, oy: 0 }));
+    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0 }));
 
     let mouseX = -9999, mouseY = -9999;
     let rafId  = null;
-    let active = false;
-
-    // Cache natural positions — must be called when chips have no transform
-    function cachePositions() {
-      chips.forEach((chip, i) => {
-        chip.style.transform = ''; // clear transform before measuring
-        const rect = chip.getBoundingClientRect();
-        state[i].ox = rect.left + rect.width  * 0.5;
-        state[i].oy = rect.top  + rect.height * 0.5;
-      });
-    }
+    let near   = false; // is cursor near the tools section?
 
     function tick() {
       let stillMoving = false;
 
       chips.forEach((chip, i) => {
         const s = state[i];
-        const dx   = mouseX - s.ox;
-        const dy   = mouseY - s.oy;
+        // Derive natural center by subtracting current animated offset from live rect
+        const rect = chip.getBoundingClientRect();
+        const naturalCx = rect.left + rect.width  * 0.5 - s.cx;
+        const naturalCy = rect.top  + rect.height * 0.5 - s.cy;
+
+        const dx   = mouseX - naturalCx;
+        const dy   = mouseY - naturalCy;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < RADIUS) {
+        if (near && dist < RADIUS) {
           const force = (1 - dist / RADIUS) * (1 - dist / RADIUS);
           s.tx = dx * force * STRENGTH;
           s.ty = dy * force * STRENGTH;
@@ -2150,7 +2143,7 @@
         if (Math.abs(s.cx - s.tx) > 0.05 || Math.abs(s.cy - s.ty) > 0.05) stillMoving = true;
       });
 
-      if (active || stillMoving) {
+      if (near || stillMoving) {
         rafId = requestAnimationFrame(tick);
       } else {
         rafId = null;
@@ -2163,24 +2156,23 @@
 
     function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
 
-    container.addEventListener('mouseenter', () => {
-      cachePositions(); // measure natural positions before any animation
-    }, { passive: true });
+    // Use document-level tracking — reliable regardless of element boundaries
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
 
-    container.addEventListener('mousemove', e => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      active = true;
+      // Check if cursor is anywhere near the tools section
+      const rect = container.getBoundingClientRect();
+      const pad  = RADIUS;
+      near = mouseX >= rect.left - pad && mouseX <= rect.right  + pad &&
+             mouseY >= rect.top  - pad && mouseY <= rect.bottom + pad;
+
       startLoop();
     }, { passive: true });
 
-    container.addEventListener('mouseleave', () => {
-      mouseX = -9999; mouseY = -9999;
-      active = false;
+    document.addEventListener('mouseleave', () => {
+      near = false; mouseX = -9999; mouseY = -9999;
       startLoop();
-    }, { passive: true });
-
-    window.addEventListener('resize', () => {
-      if (!active) cachePositions();
     }, { passive: true });
   })();
 
