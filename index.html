@@ -994,6 +994,21 @@
       object-fit: cover;
       display: block;
     }
+    .video-cta-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(234,236,240,0.72) 100%);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .video-cta-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     /* ─── Footer ─────────────────────────────────── */
     footer {
@@ -1251,6 +1266,20 @@
   <section id="video-cta">
     <div class="video-cta-card">
       <video src="kling-hero.mp4" autoplay muted loop playsinline></video>
+      <div class="video-cta-gradient"></div>
+      <div class="video-cta-hint">
+        <div class="sp-arrow-wrap">
+          <svg class="sp-chev sp-chev-1" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+          <svg class="sp-chev sp-chev-2" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+          <svg class="sp-chev sp-chev-3" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+        </div>
+        <div class="sp-luminous" aria-label="Scroll to view">
+          <span class="sp-lum-base">Scroll to view</span>
+          <span class="sp-lum-glow1" aria-hidden="true">Scroll to view</span>
+          <span class="sp-lum-glow2" aria-hidden="true">Scroll to view</span>
+          <span class="sp-lum-shine" aria-hidden="true">Scroll to view</span>
+        </div>
+      </div>
     </div>
   </section>
 
