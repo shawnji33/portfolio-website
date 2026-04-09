@@ -2184,50 +2184,32 @@
     applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
 
-  // ── RelayFi dashboard magnetic pull ─────────────────
+  // ── RelayFi dashboard parallax (cursor-opposite direction) ──
   (function () {
     const outer = document.querySelector('.rf-scene-outer');
     if (!outer) return;
     const SCENE_SCALE = 0.499;
-    const RADIUS = 280, STRENGTH = 0.18;
+    const STRENGTH = 18; // max viewport-px shift at container edge
 
     const items = Array.from(outer.querySelectorAll(
       '.rf-chart-wrap, .rf-sankey, .rf-banner, .rf-graph-wrap, .rf-tx-wrap'
     ));
     if (!items.length) return;
 
-    // Add CSS transition for spring-back
-    items.forEach(el => { el.style.transition = 'transform 0.25s cubic-bezier(.25,.46,.45,.94)'; });
-
-    let centers = [];
-
-    outer.addEventListener('mouseenter', () => {
-      centers = items.map(el => {
-        const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-      });
-    });
+    items.forEach(el => { el.style.transition = 'transform 0.35s cubic-bezier(.25,.46,.45,.94)'; });
 
     outer.addEventListener('mousemove', e => {
-      if (!centers.length) return;
-      const mx = e.clientX, my = e.clientY;
-      items.forEach((el, i) => {
-        const dx = mx - centers[i].x;
-        const dy = my - centers[i].y;
-        const d  = Math.hypot(dx, dy);
-        if (d < RADIUS) {
-          const f = 1 - d / RADIUS;  // linear falloff
-          const tx = (dx * f * STRENGTH) / SCENE_SCALE;
-          const ty = (dy * f * STRENGTH) / SCENE_SCALE;
-          el.style.transform = `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px)`;
-        } else {
-          el.style.transform = '';
-        }
-      });
+      const rect = outer.getBoundingClientRect();
+      // Normalized cursor offset from center, [-1, 1]
+      const nx = Math.max(-1, Math.min(1, (e.clientX - (rect.left + rect.width  / 2)) / (rect.width  / 2)));
+      const ny = Math.max(-1, Math.min(1, (e.clientY - (rect.top  + rect.height / 2)) / (rect.height / 2)));
+      // Opposite direction, compensated for parent scale
+      const tx = (-nx * STRENGTH / SCENE_SCALE).toFixed(2);
+      const ty = (-ny * STRENGTH / SCENE_SCALE).toFixed(2);
+      items.forEach(el => { el.style.transform = `translate(${tx}px,${ty}px)`; });
     });
 
     outer.addEventListener('mouseleave', () => {
-      centers = [];
       items.forEach(el => { el.style.transform = ''; });
     });
   })();
