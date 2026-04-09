@@ -977,15 +977,17 @@
 
     /* ─── Video CTA ──────────────────────────────── */
     #video-cta {
-      padding: 0 var(--gap);
+      padding: 0 4px 4px;
+      box-sizing: border-box;
     }
     .video-cta-card {
       position: relative;
       width: 100%;
       border-radius: 28px;
       overflow: hidden;
-      aspect-ratio: 16 / 7;
+      min-height: 120px;
       background: #0a0a0a;
+      box-sizing: border-box;
     }
     .video-cta-card video {
       width: 100%;
@@ -1246,23 +1248,10 @@
     </div>
   </section>
 
-  <!-- ── Selected Projects ────────────────────────────── -->
-  <section id="selected-projects">
-    <div class="sp-container">
-      <h2 class="sp-title">Selected Projects</h2>
-      <div class="sp-scroll-hint">
-        <div class="sp-arrow-wrap">
-          <svg class="sp-chev sp-chev-1" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
-          <svg class="sp-chev sp-chev-2" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
-          <svg class="sp-chev sp-chev-3" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
-        </div>
-        <div class="sp-luminous" aria-label="Scroll to view">
-          <span class="sp-lum-base">Scroll to view</span>
-          <span class="sp-lum-glow1" aria-hidden="true">Scroll to view</span>
-          <span class="sp-lum-glow2" aria-hidden="true">Scroll to view</span>
-          <span class="sp-lum-shine" aria-hidden="true">Scroll to view</span>
-        </div>
-      </div>
+  <!-- ── Video CTA ───────────────────────────────────────── -->
+  <section id="video-cta">
+    <div class="video-cta-card">
+      <video src="kling-hero.mp4" autoplay muted loop playsinline></video>
     </div>
   </section>
 
@@ -1507,13 +1496,6 @@
     </div>
   </section>
 
-  <!-- ── Video CTA ───────────────────────────────────────── -->
-  <section id="video-cta">
-    <div class="video-cta-card">
-      <video src="kling-hero.mp4" autoplay muted loop playsinline></video>
-    </div>
-  </section>
-
   <!-- ── Footer ─────────────────────────────────────────── -->
   <footer>
     <h3>Shawn Ji</h3>
@@ -1643,10 +1625,10 @@
     updateBg();
   })();
 
-  // ── Selected Projects height ──────────────────────────
+  // ── Video CTA height ──────────────────────────────────
   (function () {
-    const section = document.getElementById('selected-projects');
-    const container = section && section.querySelector('.sp-container');
+    const section = document.getElementById('video-cta');
+    const container = section && section.querySelector('.video-cta-card');
     if (!section || !container) return;
     function getAbsoluteTop(el) {
       let top = 0;
