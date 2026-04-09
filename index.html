@@ -758,9 +758,9 @@
       box-shadow: 0 2px 8px rgba(10,13,18,0.03);
       overflow: hidden;
       position: relative;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
+      will-change: transform;
     }
     .tool-chip:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
     .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
@@ -2095,6 +2095,79 @@
   toggleBtn.addEventListener('click', () => {
     applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
+
+  // ── Tool chips magnetic pull ──────────────────────────
+  (function () {
+    const container = document.getElementById('tools');
+    if (!container) return;
+
+    const RADIUS   = 80;    // activation radius in px
+    const STRENGTH = 0.38;  // fraction of distance to pull
+    const EASE     = 0.10;  // lerp factor per frame
+
+    const chips = Array.from(container.querySelectorAll('.tool-chip'));
+    const state = chips.map(() => ({ cx: 0, cy: 0, tx: 0, ty: 0 }));
+
+    let mouseX = -9999, mouseY = -9999;
+    let rafId  = null;
+    let active = false;
+
+    function tick() {
+      let stillMoving = false;
+
+      chips.forEach((chip, i) => {
+        const s = state[i];
+        const rect  = chip.getBoundingClientRect();
+        const chipCx = rect.left + rect.width  * 0.5;
+        const chipCy = rect.top  + rect.height * 0.5;
+
+        const dx   = mouseX - chipCx;
+        const dy   = mouseY - chipCy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < RADIUS) {
+          const force = (1 - dist / RADIUS) * (1 - dist / RADIUS); // quadratic falloff
+          s.tx = dx * force * STRENGTH;
+          s.ty = dy * force * STRENGTH;
+        } else {
+          s.tx = 0;
+          s.ty = 0;
+        }
+
+        s.cx += (s.tx - s.cx) * EASE;
+        s.cy += (s.ty - s.cy) * EASE;
+
+        chip.style.transform = `translate(${s.cx.toFixed(2)}px,${s.cy.toFixed(2)}px)`;
+
+        if (Math.abs(s.cx - s.tx) > 0.05 || Math.abs(s.cy - s.ty) > 0.05) stillMoving = true;
+      });
+
+      if (active || stillMoving) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+        // snap fully to rest when settled
+        chips.forEach((chip, i) => {
+          state[i].cx = state[i].cy = 0;
+          chip.style.transform = '';
+        });
+      }
+    }
+
+    function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
+
+    container.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      active = true;
+      startLoop();
+    }, { passive: true });
+
+    container.addEventListener('mouseleave', () => {
+      mouseX = -9999; mouseY = -9999;
+      active = false;
+      startLoop(); // let chips spring back
+    }, { passive: true });
+  })();
 
   // ── Carousel scroll ───────────────────────────────────
   function scrollCarousel(id, dir) {
