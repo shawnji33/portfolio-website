@@ -891,45 +891,54 @@
       object-fit: unset;
       object-position: unset;
     }
-    /* RelayFi gallery card */
+    /* RelayFi full-section layout */
     .rf-scene-outer {
       width: 1067px;
       height: 670px;
       overflow: hidden;
+      position: relative;
       flex-shrink: 0;
-      display: flex;
-      gap: 20px;
-      padding: 30px;
-      box-sizing: border-box;
-      align-items: center;
-      background: rgba(255,255,255,0.40);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
     }
-    .rf2-left {
-      width: 549px;
-      flex-shrink: 0;
+    .rf-scene {
+      width: 2139px;
+      height: 1342px;
+      transform: scale(0.499);
+      transform-origin: top left;
+      background: rgba(255,255,255,0.40);
+      padding: 60px;
+      box-sizing: border-box;
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-self: center;
+      gap: 40px;
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
-    .rf2-right {
+    .rf-main { width: 1166px; flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; }
+    .rf-right { width: 813px; flex-shrink: 0; display: flex; flex-direction: column; gap: 40px; justify-content: center; }
+    .rf-chart-wrap { border-radius: 12px; overflow: hidden; flex-shrink: 0; line-height: 0; }
+    .rf-sankey {
+      background: #FFFEF7;
+      border-radius: 12px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: center;
       justify-content: center;
-      align-self: stretch;
+      padding: 36px 32px;
+      overflow: hidden;
+      gap: 0;
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03), 0 0 0 1px rgba(10,13,18,0.03);
     }
-    .rf2-img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 6px;
-      will-change: transform;
+    .rf-banner {
+      background: #FFFEF7;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
       flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03), 0 0 0 1px rgba(10,13,18,0.03);
     }
+    .rf-graph-wrap, .rf-tx-wrap { border-radius: 12px; overflow: hidden; flex-shrink: 0; line-height: 0; }
     .proj-card {
       background: rgba(255,255,255,0.40);
       backdrop-filter: blur(4px);
@@ -1385,16 +1394,81 @@
     </div>
     <!-- Image gallery row -->
     <div class="proj-gallery-row">
-      <!-- RelayFi gallery card — 5 images from Figma node 10637:3489 -->
-      <div class="proj-card proj-img rf-scene-outer" id="rf-gallery-card">
-        <div class="rf2-left">
-          <img src="rf-img15.png" class="rf2-img" alt="Cash flow report" loading="lazy" decoding="async" />
-          <img src="rf-img16.png" class="rf2-img" alt="Cash flow sankey" loading="lazy" decoding="async" />
-        </div>
-        <div class="rf2-right">
-          <img src="rf-img17.png" class="rf2-img" alt="Notification" loading="lazy" decoding="async" />
-          <img src="rf-img18.png" class="rf2-img" alt="Cash flow graph" loading="lazy" decoding="async" />
-          <img src="rf-img19.png" class="rf2-img" alt="Transactions" loading="lazy" decoding="async" />
+      <!-- RelayFi full Figma section layout (node 10621:2949, 2139×1342 → scaled to 670px tall) -->
+      <div class="proj-card proj-img rf-scene-outer">
+        <div class="rf-scene">
+          <!-- Left: Main Content (1166px) -->
+          <div class="rf-main">
+            <div class="rf-chart-wrap">
+              <img src="relayfi-img1.png" style="width:1166px;height:auto;display:block;" loading="lazy" decoding="async" />
+            </div>
+            <div class="rf-sankey">
+              <!-- Transfers from -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
+                <p style="font-size:16px;color:#25201F;line-height:1.3;font-weight:500;">Transfers from:</p>
+                <div style="border:1px solid #F1ECDA;border-radius:3px;padding:12px 16px;width:619px;display:flex;justify-content:center;align-items:center;background:#FFFEF7;box-shadow:0 4px 16px rgba(207,201,156,0.15);">
+                  <div style="text-align:center;"><div style="font-size:15px;color:#25201F;">Income</div><div style="font-size:24px;font-weight:700;color:#25201F;">$50,000</div></div>
+                </div>
+              </div>
+              <!-- Top bar -->
+              <div style="background:#6E82ED;height:8px;width:613px;margin-top:0;flex-shrink:0;"></div>
+              <!-- Sankey flow -->
+              <div style="width:985px;height:161px;position:relative;overflow:hidden;flex-shrink:0;">
+                <div style="position:absolute;width:476px;height:262px;left:16px;top:-49px;"><img src="relayfi-flow1.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:241px;height:260px;left:438px;top:-51px;"><img src="relayfi-flow2.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:146px;height:261px;left:679px;top:-48px;"><img src="relayfi-flow3.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:199px;height:252px;left:770px;top:-45px;"><img src="relayfi-flow4.svg" style="width:100%;height:100%;display:block;" /></div>
+                <p style="position:absolute;left:170px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">50%</p>
+                <p style="position:absolute;left:525px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">30%</p>
+                <p style="position:absolute;left:761px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">15%</p>
+                <p style="position:absolute;left:938px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">5%</p>
+              </div>
+              <!-- Account destination labels -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;width:953px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:309px;">
+                  <div style="background:#6E82ED;height:26px;width:309px;border-radius:0 0 1px 1px;flex-shrink:0;"></div>
+                  <div style="text-align:center;"><div style="font-size:15px;color:#25201F;line-height:1.3;">Owner's Comp</div><div style="font-size:24px;font-weight:700;color:#25201F;line-height:1.2;">$25,000</div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:183px;">
+                  <div style="background:#6E82ED;height:26px;width:183px;border-radius:0 0 1px 1px;flex-shrink:0;"></div>
+                  <div style="text-align:center;"><div style="font-size:15px;color:#25201F;line-height:1.3;">Operating Expenses</div><div style="font-size:24px;font-weight:700;color:#25201F;line-height:1.2;">$15,000</div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:91px;">
+                  <div style="background:#6E82ED;height:26px;width:91px;border-radius:0 0 1px 1px;flex-shrink:0;"></div>
+                  <div style="text-align:center;"><div style="font-size:15px;color:#25201F;line-height:1.3;">Tax</div><div style="font-size:24px;font-weight:700;color:#25201F;line-height:1.2;">$7,500</div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:30px;">
+                  <div style="background:#6E82ED;height:26px;width:30px;border-radius:0 0 1px 1px;flex-shrink:0;"></div>
+                  <div style="text-align:center;white-space:nowrap;"><div style="font-size:15px;color:#25201F;line-height:1.3;">Profit</div><div style="font-size:24px;font-weight:700;color:#25201F;line-height:1.2;">$2,500</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Right: Right Section (813px) -->
+          <div class="rf-right">
+            <!-- Notification banner -->
+            <div class="rf-banner">
+              <div style="background:#407659;width:7px;flex-shrink:0;"></div>
+              <div style="flex:1;padding:24px 24px 24px 20px;display:flex;gap:16px;align-items:center;background:#FFFEF7;box-shadow:0 4px 16px rgba(207,201,156,0.15);">
+                <img src="relayfi-icon.svg" style="width:32px;height:32px;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <p style="font-weight:700;font-size:16px;color:#25201F;line-height:1.3;margin-bottom:4px;">Your August 2023 cash flow report is ready</p>
+                  <p style="font-size:16px;color:#504B4A;line-height:1.3;">See how company income and expenses are trending by clients and vendors, and get a view of cash flow across your business.</p>
+                </div>
+                <div style="border:1px solid #004822;border-radius:60px;padding:8px 24px;flex-shrink:0;">
+                  <span style="font-size:14px;color:#004822;font-weight:500;">View full report</span>
+                </div>
+              </div>
+            </div>
+            <!-- Cash flow graph -->
+            <div class="rf-graph-wrap">
+              <img src="relayfi-graph.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
+            </div>
+            <!-- Transactions table -->
+            <div class="rf-tx-wrap">
+              <img src="relayfi-transactions.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
+            </div>
+          </div>
         </div>
       </div>
       <div class="proj-card proj-img" style="background:rgba(255,255,255,0.6);">
@@ -2022,48 +2096,45 @@
     applyTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   });
 
-  // ── RelayFi gallery — magnetic image pull ────────────
+  // ── Tool chips magnetic pull ──────────────────────────
   (function () {
-    const card = document.getElementById('rf-gallery-card');
-    if (!card) return;
+    const chips = Array.from(document.querySelectorAll('#tools .tool-chip'));
+    if (!chips.length) return;
 
-    const imgs   = Array.from(card.querySelectorAll('.rf2-img'));
-    const RADIUS   = 180;   // screen px — large so images react before cursor is on them
-    const STRENGTH = 0.10;  // % of distance to pull
-    const EASE     = 0.09;  // lerp factor per frame
-    const p = imgs.map(() => ({ x:0, y:0, tx:0, ty:0, nx:0, ny:0 }));
-    let mx = -9999, my = -9999, raf = null, active = false;
+    const RADIUS = 90, STRENGTH = 0.35, EASE = 0.12;
+    // x/y = current animated offset; tx/ty = target; nx/ny = natural center in page coords
+    const p = chips.map(() => ({ x:0, y:0, tx:0, ty:0, nx:0, ny:0 }));
+    let px = -9999, py = -9999, raf = null;
 
-    // Measure natural image centers in page coords
     function measure() {
-      imgs.forEach((img, i) => {
-        img.style.transform = '';
+      chips.forEach((c, i) => {
+        c.style.transform = '';
         p[i].x = p[i].y = p[i].tx = p[i].ty = 0;
-        let el = img, nx = 0, ny = 0;
+        let el = c, nx = 0, ny = 0;
         while (el) { nx += el.offsetLeft; ny += el.offsetTop; el = el.offsetParent; }
-        p[i].nx = nx + img.offsetWidth  * 0.5;
-        p[i].ny = ny + img.offsetHeight * 0.5;
+        p[i].nx = nx + c.offsetWidth  * 0.5;
+        p[i].ny = ny + c.offsetHeight * 0.5;
       });
     }
 
     function frame() {
       let busy = false;
-      imgs.forEach((img, i) => {
+      chips.forEach((c, i) => {
         const s = p[i];
-        const dx = mx - s.nx, dy = my - s.ny;
+        const dx = px - s.nx, dy = py - s.ny;
         const d  = Math.hypot(dx, dy);
-        if (active && d < RADIUS) {
+        if (px > -100 && d < RADIUS) {
           const f = (1 - d / RADIUS) ** 2;
           s.tx = dx * f * STRENGTH;
           s.ty = dy * f * STRENGTH;
         } else { s.tx = s.ty = 0; }
         s.x += (s.tx - s.x) * EASE;
         s.y += (s.ty - s.y) * EASE;
-        img.style.transform = `translate(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px)`;
+        c.style.transform = `translate(${s.x.toFixed(2)}px,${s.y.toFixed(2)}px)`;
         if (Math.abs(s.x - s.tx) > 0.05 || Math.abs(s.y - s.ty) > 0.05) busy = true;
       });
-      raf = (active || busy) ? requestAnimationFrame(frame) : null;
-      if (!raf) imgs.forEach((img, i) => { p[i].x = p[i].y = 0; img.style.transform = ''; });
+      raf = (busy || px > -100) ? requestAnimationFrame(frame) : null;
+      if (!raf) chips.forEach((c, i) => { p[i].x = p[i].y = 0; c.style.transform = ''; });
     }
 
     function start() { if (!raf) raf = requestAnimationFrame(frame); }
@@ -2072,17 +2143,12 @@
     window.addEventListener('resize', measure);
 
     document.addEventListener('mousemove', e => {
-      mx = e.pageX; my = e.pageY;
-      // Only activate when cursor is over or near the card
-      const r = card.getBoundingClientRect();
-      const pad = RADIUS;
-      active = e.clientX >= r.left - pad && e.clientX <= r.right  + pad &&
-               e.clientY >= r.top  - pad && e.clientY <= r.bottom + pad;
+      px = e.pageX; py = e.pageY;
       start();
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
-      active = false; mx = my = -9999; start();
+      px = py = -9999; start();
     });
   })();
 
