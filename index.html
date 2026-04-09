@@ -63,13 +63,16 @@
     [data-theme="dark"] ::selection { background: rgba(255,255,255,0.1); }
 
     /* ─── Base ───────────────────────────────────── */
-    html { height: 100%; background: #EAECF0; }
+    html { height: 100%; background: #EAECF0; transition: background-color 0.7s ease; }
+    html.tint-relayfi { background-color: #F3F6D7; }
+    body.tint-relayfi { background-color: #F3F6D7 !important; }
     [data-theme="dark"] html { background: hsl(240,15%,8%); }
     body {
       min-height: 100%;
       cursor: default;
       position: relative;
       background-color: var(--background);
+      transition: background-color 0.7s ease;
       color: var(--text-1);
       color-scheme: light;
       font: 20px/24px var(--font-regular);
@@ -141,6 +144,7 @@
       pointer-events: none;
       overflow: hidden;
       background: #EAECF0;
+      transition: background-color 0.7s ease;
     }
     [data-theme="dark"] .mesh-bg { background: hsl(240,15%,8%); }
 
@@ -166,24 +170,6 @@
     .span-all  { grid-column: 1 / span 4; }
     .span-half { grid-column-end: span 2; }
 
-    /* ─── Scroll reveal ──────────────────────────── */
-    .sr {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    .sr.sr-clip {
-      transform: none;
-      clip-path: inset(0 0 36% 0);
-      transition: opacity 0.36s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                  clip-path 0.36s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-    .sr.revealed {
-      opacity: 1;
-      transform: translateY(0);
-      clip-path: inset(0 0 0% 0);
-    }
 
     /* ─── Cell ───────────────────────────────────── */
     .cell {
@@ -421,7 +407,7 @@
       flex-shrink: 0;
       display: flex;
       align-items: center;
-      padding: 16px 96px 16px 20px;
+      padding: 16px 96px 16px 16px;
       height: auto;
     }
     .actions-open {
@@ -444,7 +430,7 @@
       align-items: center;
       gap: 16px;
       flex-shrink: 0;
-      padding: 16px 96px 16px 20px;
+      padding: 16px 96px 16px 16px;
       border-radius: 16px;
       background: rgba(255,255,255,0.8);
       box-shadow: 0 2px 8px rgba(10,13,18,0.03), 0 0 0 1px rgba(10,13,18,0.03);
@@ -469,7 +455,7 @@
       overflow: hidden;
       display: flex;
       align-items: center;
-      padding: 16px 20px;
+      padding: 16px 16px;
     }
     [data-theme="dark"] .actions-linkedin { background: var(--cell-background); }
     [data-theme="dark"] .actions-ticker { background: var(--cell-background); }
@@ -738,7 +724,7 @@
       box-shadow: 0 2px 8px rgba(10,13,18,0.03);
       display: flex;
       align-items: center;
-      padding: 0 20px;
+      padding: 0 16px;
       flex-shrink: 0;
       height: 62px;
       font-family: var(--font-regular);
@@ -779,6 +765,207 @@
     .tool-chip img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
     .tool-chip-cursor { overflow: visible; width: 62px !important; }
     .tool-chip-cursor img { width: 68px !important; height: 68px !important; position: absolute; top: -5%; left: -5%; }
+
+    /* ─── Selected Projects ─────────────────────── */
+    #selected-projects {
+      padding: 0 4px 4px;
+      box-sizing: border-box;
+    }
+    .sp-container {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      box-shadow: none;
+      padding: 21px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 120px;
+      box-sizing: border-box;
+    }
+    .sp-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      color: #4a4d5e;
+      letter-spacing: -0.5px;
+      line-height: normal;
+      margin: 0;
+    }
+    .sp-scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sp-arrow-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 22px;
+      flex-shrink: 0;
+    }
+    .sp-chev {
+      width: 22px;
+      height: 10px;
+      color: #8891a9;
+      display: block;
+    }
+    .sp-chev + .sp-chev { margin-top: -4px; }
+    @keyframes sp-chev-pulse {
+      0%, 55%, 100% { opacity: 0.12; }
+      25% { opacity: 0.82; }
+    }
+    .sp-chev-1 { animation: sp-chev-pulse 1.8s ease-in-out infinite 0s; }
+    .sp-chev-2 { animation: sp-chev-pulse 1.8s ease-in-out infinite 0.22s; }
+    .sp-chev-3 { animation: sp-chev-pulse 1.8s ease-in-out infinite 0.44s; }
+    .sp-luminous {
+      position: relative;
+      display: inline-block;
+    }
+    .sp-lum-base, .sp-lum-glow1, .sp-lum-glow2, .sp-lum-shine {
+      font-family: var(--font-regular);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      display: block;
+    }
+    .sp-lum-base { color: rgba(136,145,169,0.4); }
+    .sp-lum-glow1, .sp-lum-glow2, .sp-lum-shine {
+      position: absolute;
+      left: 0; top: 0;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      color: rgba(136,145,169,0.4);
+    }
+    .sp-lum-glow1 { filter: blur(2px); opacity: 0.25; }
+    .sp-lum-glow2 { filter: blur(6px); opacity: 0.12; }
+    .sp-lum-shine {
+      background: linear-gradient(90deg, transparent 0%, transparent 25%, rgba(220,230,255,1) 50%, transparent 75%, transparent 100%);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: sp-lum-shine 5s linear infinite;
+    }
+    @keyframes sp-lum-shine {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    @keyframes sp-lum-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .sp-lum-glow1 { animation: sp-lum-pulse 5s ease-in-out infinite; }
+    .sp-lum-glow2 { animation: sp-lum-pulse 5s ease-in-out infinite 0.3s; }
+
+    /* ─── Project: RelayFi ──────────────────────── */
+    #project-relayfi {
+      padding: 0 4px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .proj-desc-row {
+      display: flex;
+      gap: 4px;
+      height: 220px;
+    }
+    .proj-gallery-row {
+      display: flex;
+      gap: 4px;
+      height: 670px;
+    }
+    .proj-card {
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03);
+    }
+    .proj-name {
+      flex: 0 0 calc(20% - 3.2px);
+      padding: 21px;
+      display: flex;
+      flex-direction: column;
+    }
+    .proj-project-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      color: #4a4d5e;
+      letter-spacing: -0.5px;
+      line-height: normal;
+      margin: 0;
+    }
+    .proj-middle {
+      flex: 3 3 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .proj-description {
+      flex: 1 1 0;
+      padding: 21px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .proj-body {
+      font-family: var(--font-regular);
+      font-size: 20px;
+      font-weight: 400;
+      color: #4a4d5e;
+      letter-spacing: -0.5px;
+      line-height: normal;
+      margin: 0;
+    }
+    .proj-cta {
+      flex: 0 0 62px;
+      background: rgba(214,226,119,0.5);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(10,13,18,0.03);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      text-decoration: none;
+      transition: background 0.15s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+    .proj-cta:hover { background: rgba(214,226,119,0.75); transform: scale(1.01); }
+    .proj-cta:active { transform: scale(0.98); }
+    .proj-cta span {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      color: #525c00;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+    .proj-skills {
+      flex: 0 0 calc(20% - 3.2px);
+      padding: 21px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .proj-skills p {
+      font-family: var(--font-regular);
+      font-size: 20px;
+      font-weight: 400;
+      color: #777e99;
+      letter-spacing: -0.5px;
+      line-height: normal;
+      margin: 0;
+    }
+    .proj-img {
+      flex: 1 1 0;
+      min-width: 0;
+    }
 
     /* ─── Video CTA ──────────────────────────────── */
     #video-cta {
@@ -840,7 +1027,7 @@
       .button-prev, .button-next { display: none; }
       #actions { flex-direction: column; }
       .actions-ticker { flex: none; align-self: stretch; }
-      .actions-linkedin { padding-right: 20px; }
+      .actions-linkedin { padding-right: 16px; }
       .intro-text { grid-column-end: span 2; font-size: 24px; }
       #tools { flex-wrap: wrap; }
       #tools .tools-label { flex: 1 0 100%; }
@@ -911,7 +1098,7 @@
           <span class="rotate-word" data-idx="1">Design eng</span>
           <span class="rotate-word" data-idx="2">Vibe coding</span>
           <span class="rotate-word" data-idx="3">AI products</span>
-          <span class="rotate-word" data-idx="4">Systems thinking</span>
+          <span class="rotate-word" data-idx="4">Strategic design</span>
           <span class="rotate-word" data-idx="5">Design + code</span>
           <span class="rotate-word" data-idx="6">Building wealth</span>
         </span>
@@ -1014,7 +1201,7 @@
       <img src="tool-chatgpt.svg" loading="lazy" alt="ChatGPT" style="width:24px;height:24px;" />
     </div>
     <!-- Claude -->
-    <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 20px;" title="Claude">
+    <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 16px;" title="Claude">
       <img src="tool-claude.svg" loading="lazy" alt="Claude" style="width:93px;height:20px;" />
     </div>
     <!-- Next.js -->
@@ -1034,11 +1221,11 @@
       <img src="tool-notion.svg" loading="lazy" alt="Notion" style="width:24px;height:25px;" />
     </div>
     <!-- Vercel -->
-    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="Vercel">
+    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 16px;" title="Vercel">
       <img src="tool-vercel.svg" loading="lazy" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
     </div>
     <!-- GitHub -->
-    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 20px;" title="GitHub">
+    <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 16px;" title="GitHub">
       <img src="tool-github.svg" loading="lazy" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
     </div>
     <!-- Codex -->
@@ -1046,8 +1233,61 @@
       <img src="tool-codex.svg" loading="lazy" alt="Codex" style="width:24px;height:24px;" />
     </div>
     <!-- Filler -->
-    <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.36) 0%,rgba(204,205,233,0.36) 22.6%,rgba(231,185,221,0.36) 47.7%,rgba(231,208,196,0.36) 72.6%,rgba(231,219,184,0.36) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 20px;">
+    <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.36) 0%,rgba(204,205,233,0.36) 22.6%,rgba(231,185,221,0.36) 47.7%,rgba(231,208,196,0.36) 72.6%,rgba(231,219,184,0.36) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 16px;">
       <p style="font-family:var(--font-regular);font-size:17px;font-weight:400;color:#5a5d73;letter-spacing:-0.7px;margin:0;">Grinding<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
+    </div>
+  </section>
+
+  <!-- ── Selected Projects ────────────────────────────── -->
+  <section id="selected-projects">
+    <div class="sp-container">
+      <h2 class="sp-title">Selected Projects</h2>
+      <div class="sp-scroll-hint">
+        <div class="sp-arrow-wrap">
+          <svg class="sp-chev sp-chev-1" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+          <svg class="sp-chev sp-chev-2" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+          <svg class="sp-chev sp-chev-3" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 3 L12 10 L21 3"/></svg>
+        </div>
+        <div class="sp-luminous" aria-label="Scroll to view">
+          <span class="sp-lum-base">Scroll to view</span>
+          <span class="sp-lum-glow1" aria-hidden="true">Scroll to view</span>
+          <span class="sp-lum-glow2" aria-hidden="true">Scroll to view</span>
+          <span class="sp-lum-shine" aria-hidden="true">Scroll to view</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Project: RelayFi ─────────────────────────────── -->
+  <section id="project-relayfi">
+    <!-- Description row -->
+    <div class="proj-desc-row">
+      <div class="proj-card proj-name">
+        <p class="proj-project-title">RelayFi</p>
+      </div>
+      <div class="proj-middle">
+        <div class="proj-card proj-description">
+          <p class="proj-body">I led design at RelayFi, a fintech platform that simplifies business banking. There I designed 3 new product features end-to-end, scoped a strategic project from scratch, ran experimental prototypes to push the experience forward, and shipped a feature live.</p>
+        </div>
+        <a href="#" class="proj-cta">
+          <span>View Case Study</span>
+        </a>
+      </div>
+      <div class="proj-card proj-skills">
+        <p>Feature Scoping</p>
+        <p>Interaction Design</p>
+        <p>Visual Design</p>
+        <p>Prototyping</p>
+        <p>UX Research</p>
+      </div>
+    </div>
+    <!-- Image gallery row -->
+    <div class="proj-gallery-row">
+      <div class="proj-card proj-img"></div>
+      <div class="proj-card proj-img"></div>
+      <div class="proj-card proj-img"></div>
+      <div class="proj-card proj-img"></div>
+      <div class="proj-card proj-img"></div>
     </div>
   </section>
 
@@ -1363,6 +1603,45 @@
     setInterval(next, INTERVAL);
   })();
 
+  // ── Section background tint on scroll ────────────────
+  (function () {
+    const section = document.getElementById('project-relayfi');
+    const meshBg  = document.querySelector('.mesh-bg');
+    if (!section || !meshBg) return;
+    const DEFAULT = '#EAECF0';
+    const TINT    = '#F3F6D7';
+    function getSectionTop() {
+      let top = 0, el = section;
+      while (el) { top += el.offsetTop; el = el.offsetParent; }
+      return top;
+    }
+    function updateBg() {
+      const sectionTop    = getSectionTop();
+      const sectionBottom = sectionTop + section.offsetHeight;
+      const scrollMid     = window.scrollY + window.innerHeight * 0.5;
+      const active        = scrollMid >= sectionTop && window.scrollY < sectionBottom;
+      meshBg.style.backgroundColor = active ? TINT : DEFAULT;
+    }
+    document.addEventListener('scroll', updateBg, { passive: true, capture: true });
+    window.addEventListener('load', updateBg);
+    updateBg();
+  })();
+
+  // ── Selected Projects height ──────────────────────────
+  (function () {
+    const section = document.getElementById('selected-projects');
+    const container = section && section.querySelector('.sp-container');
+    if (!section || !container) return;
+    function fitHeight() {
+      container.style.minHeight = '';
+      const top = section.getBoundingClientRect().top;
+      const remaining = window.innerHeight - top - 8;
+      container.style.minHeight = Math.max(120, remaining) + 'px';
+    }
+    fitHeight();
+    window.addEventListener('resize', fitHeight);
+  })();
+
   // ── Header fill ───────────────────────────────────────
   (function () {
     const wrap   = document.getElementById('headerRotate');
@@ -1519,36 +1798,6 @@
     requestAnimationFrame(frame);
   })();
 
-  // ── Scroll-triggered reveals ──────────────────────────
-  (function () {
-    // Video CTA gets a clip-path wipe; everything else gets fade-up
-    document.querySelectorAll('#video-cta .video-cta-card').forEach(el => el.classList.add('sr', 'sr-clip'));
-    document.querySelectorAll('.cell, .actions-linkedin, .actions-audio, .actions-ticker, footer').forEach(el => el.classList.add('sr'));
-
-    // Group siblings within the same parent so we can stagger them
-    const seen = new Set();
-    document.querySelectorAll('.sr').forEach(el => {
-      if (seen.has(el)) return;
-      const siblings = Array.from(el.parentElement.querySelectorAll(':scope > .sr'));
-      siblings.forEach((sib, i) => {
-        sib.style.transitionDelay = `${i * 55}ms`;
-        seen.add(sib);
-      });
-    });
-
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        el.classList.add('revealed');
-        // Clear delay after animation so scroll-blur transitions aren't staggered
-        setTimeout(() => { el.style.transitionDelay = ''; }, 600);
-        io.unobserve(el);
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-
-    document.querySelectorAll('.sr').forEach(el => io.observe(el));
-  })();
 
   // ── Scroll blur reveal ────────────────────────────────
   (function () {
