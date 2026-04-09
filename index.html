@@ -2139,10 +2139,13 @@
 
     function start() { if (!raf) raf = requestAnimationFrame(frame); }
 
-    window.addEventListener('load',   measure);
+    // Measure immediately — tools bar is at top, unaffected by image loads
+    measure();
+    window.addEventListener('load',   measure); // re-measure after fonts settle
     window.addEventListener('resize', measure);
 
     document.addEventListener('mousemove', e => {
+      if (p[0].nx === 0) measure(); // fallback if measure fired too early
       px = e.pageX; py = e.pageY;
       start();
     }, { passive: true });
