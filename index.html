@@ -2103,7 +2103,7 @@
     const chips = Array.from(container.querySelectorAll('.tool-chip'));
     if (!chips.length) return;
 
-    const RADIUS = 110, STRENGTH = 0.65;
+    const RADIUS = 150, STRENGTH = 0.55;
     let centers = [];
 
     // Measure natural centers on mouseenter (before any transforms)
@@ -2115,6 +2115,7 @@
     });
 
     // Apply directly on mousemove — CSS transition handles smoothing
+    // Linear falloff (not quadratic) keeps edge chips feeling just as reactive
     container.addEventListener('mousemove', e => {
       if (!centers.length) return;
       const mx = e.clientX, my = e.clientY;
@@ -2123,7 +2124,7 @@
         const dy = my - centers[i].y;
         const d  = Math.hypot(dx, dy);
         if (d < RADIUS) {
-          const f = (1 - d / RADIUS) ** 2;
+          const f = 1 - d / RADIUS;  // linear falloff — stays strong at edges
           chip.style.transform = `translate(${(dx * f * STRENGTH).toFixed(2)}px,${(dy * f * STRENGTH).toFixed(2)}px)`;
         } else {
           chip.style.transform = '';
@@ -2144,7 +2145,7 @@
     // rf-scene has transform:scale(0.499); children are in that local space.
     // Dividing viewport-px offset by SCENE_SCALE gives the correct local translate.
     const SCENE_SCALE = 0.499;
-    const RADIUS = 250, STRENGTH = 0.35;
+    const RADIUS = 320, STRENGTH = 0.40;
 
     const items = Array.from(outer.querySelectorAll(
       '.rf-chart-wrap, .rf-sankey, .rf-banner, .rf-graph-wrap, .rf-tx-wrap'
@@ -2171,7 +2172,7 @@
         const dy = my - centers[i].y;
         const d  = Math.hypot(dx, dy);
         if (d < RADIUS) {
-          const f = (1 - d / RADIUS) ** 2;
+          const f = 1 - d / RADIUS;  // linear falloff
           const tx = (dx * f * STRENGTH) / SCENE_SCALE;
           const ty = (dy * f * STRENGTH) / SCENE_SCALE;
           el.style.transform = `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px)`;
