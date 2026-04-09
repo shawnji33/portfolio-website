@@ -891,12 +891,20 @@
       padding: 21px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
     }
+    .proj-name-link {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .proj-name-link:hover { transform: scale(1.015); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+    .proj-name-link:active { transform: scale(0.97); box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: transform 0.08s ease, box-shadow 0.08s ease; }
     .proj-project-title {
       font-family: var(--font-display);
       font-size: 28px;
       font-weight: 500;
-      color: #4a4d5e;
+      color: #355a3e;
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
@@ -918,7 +926,7 @@
       font-family: var(--font-regular);
       font-size: 20px;
       font-weight: 400;
-      color: #4a4d5e;
+      color: rgba(38,42,0,0.8);
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
@@ -957,7 +965,7 @@
       font-family: var(--font-regular);
       font-size: 20px;
       font-weight: 400;
-      color: #777e99;
+      color: rgba(38,42,0,0.6);
       letter-spacing: -0.5px;
       line-height: normal;
       margin: 0;
@@ -1262,9 +1270,16 @@
   <section id="project-relayfi">
     <!-- Description row -->
     <div class="proj-desc-row">
-      <div class="proj-card proj-name">
+      <a href="https://relayfi.com/" target="_blank" rel="noopener noreferrer" class="proj-card proj-name proj-name-link">
         <p class="proj-project-title">RelayFi</p>
-      </div>
+        <div style="display:flex;justify-content:flex-end;width:100%;">
+          <div style="width:32px;height:32px;border-radius:999px;background:rgba(213,226,123,0.3);border:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.5 11.5L11.5 2.5M11.5 2.5H5M11.5 2.5V9" stroke="#355a3e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </a>
       <div class="proj-middle">
         <div class="proj-card proj-description">
           <p class="proj-body">I led design at RelayFi, a fintech platform that simplifies business banking. There I designed 3 new product features end-to-end, scoped a strategic project from scratch, ran experimental prototypes to push the experience forward, and shipped a feature live.</p>
@@ -1283,11 +1298,12 @@
     </div>
     <!-- Image gallery row -->
     <div class="proj-gallery-row">
-      <div class="proj-card proj-img"></div>
-      <div class="proj-card proj-img"></div>
-      <div class="proj-card proj-img"></div>
-      <div class="proj-card proj-img"></div>
-      <div class="proj-card proj-img"></div>
+      <div class="proj-card proj-img" style="flex:899 1 0;background:#514745;overflow:hidden;">
+        <img src="relayfi-img1.png" alt="RelayFi dashboard" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+      </div>
+      <div class="proj-card proj-img" style="flex:690 1 0;background:rgba(255,255,255,0.6);overflow:hidden;">
+        <img src="relayfi-img2.png" alt="RelayFi mobile" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+      </div>
     </div>
   </section>
 
@@ -1619,7 +1635,7 @@
       const sectionTop    = getSectionTop();
       const sectionBottom = sectionTop + section.offsetHeight;
       const scrollMid     = window.scrollY + window.innerHeight * 0.5;
-      const active        = scrollMid >= sectionTop && window.scrollY < sectionBottom;
+      const active        = scrollMid >= sectionTop && scrollMid < sectionBottom;
       meshBg.style.backgroundColor = active ? TINT : DEFAULT;
     }
     document.addEventListener('scroll', updateBg, { passive: true, capture: true });
@@ -1632,10 +1648,15 @@
     const section = document.getElementById('selected-projects');
     const container = section && section.querySelector('.sp-container');
     if (!section || !container) return;
+    function getAbsoluteTop(el) {
+      let top = 0;
+      while (el) { top += el.offsetTop; el = el.offsetParent; }
+      return top;
+    }
     function fitHeight() {
       container.style.minHeight = '';
-      const top = section.getBoundingClientRect().top;
-      const remaining = window.innerHeight - top - 8;
+      const absTop = getAbsoluteTop(section);
+      const remaining = window.innerHeight - absTop - 8;
       container.style.minHeight = Math.max(120, remaining) + 'px';
     }
     fitHeight();
