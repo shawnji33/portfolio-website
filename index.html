@@ -1121,6 +1121,83 @@
       gap: 6px;
     }
 
+    /* ─── Globe ─────────────────────────────────── */
+    #globe-section {
+      margin: 0 var(--gap) var(--gap);
+      border-radius: 20px;
+      overflow: visible;
+      background: var(--cell-background);
+      border: 1px solid rgba(0,0,0,0.06);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0 44px;
+      position: relative;
+    }
+    #globe-wrap {
+      position: relative;
+      width: 520px;
+      max-width: min(520px, 88vw);
+      user-select: none;
+      contain: layout style;
+      cursor: grab;
+    }
+    #globe-wrap.globe-dragging {
+      cursor: grabbing;
+    }
+    #globe-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    /* polaroid cards — positioned via CSS Anchor Positioning (cobe v2) */
+    .globe-polaroid {
+      position: absolute;
+      bottom: anchor(top);
+      left: anchor(center);
+      translate: -50% 0;
+      margin-bottom: 8px;
+      background: #fff;
+      padding: 6px 6px 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.14), 0 1px 3px rgba(0,0,0,0.08);
+      transform: rotate(var(--p-rot, 0deg));
+      transition: opacity 0.3s ease, filter 0.3s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+    #globe-wrap.globe-dragging .globe-polaroid {
+      opacity: 0 !important;
+      filter: blur(8px) !important;
+    }
+    .globe-polaroid-photo {
+      display: block;
+      width: 64px;
+      height: 64px;
+      border-radius: 1px;
+    }
+    .globe-polaroid-caption {
+      position: absolute;
+      bottom: 9px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 0.03em;
+    }
+    #globe-label {
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
     /* ─── Footer ─────────────────────────────────── */
     footer {
       margin-top: 6px;
@@ -1246,9 +1323,9 @@
     <div class="cell span-all">
       <p class="intro-text">
         I'm <span style="color:#30313B">Shawn Ji</span>, a product designer based in <span style="color:#30313B">Toronto</span>
-        <span class="tilt-badge" id="badge-toronto" style="background:#efe8e7"><img src="badge-toronto.png" alt="Toronto" /></span>,
+        <span class="tilt-badge" id="badge-toronto" style="background:#efe8e7"><img src="images/badges/badge-toronto.png" alt="Toronto" /></span>,
         obsessed with <span style="color:#30313B">Fin-tech</span>
-        <span class="tilt-badge" id="badge-fintech" style="background:#ede7ef"><img src="badge-fintech.png" alt="Fin-tech" /></span>,
+        <span class="tilt-badge" id="badge-fintech" style="background:#ede7ef"><img src="images/badges/badge-fintech.png" alt="Fin-tech" /></span>,
         making complexity feel simple.
       </p>
     </div>
@@ -1272,7 +1349,7 @@
       <h2>LinkedIn</h2>
     </a>
     <div class="actions-audio" id="audioPlayer">
-      <audio id="audioEl" src="ryoish-january-336894.mp3" preload="metadata" loop></audio>
+      <audio id="audioEl" src="media/ryoish-january-336894.mp3" preload="metadata" loop></audio>
       <div class="audio-wave-bars">
         <span class="audio-bar"></span>
         <span class="audio-bar"></span>
@@ -1290,30 +1367,30 @@
       <div class="ticker-list">
         <div class="ticker-strip">
           <!-- 4 sets for seamless loop -->
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:14px"><img src="ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:26px"><img src="ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:17px"><img src="ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:22px"><img src="ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
-          <div class="ticker-logo-wrap" style="height:21px"><img src="ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="images/tickers/ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="images/tickers/ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="images/tickers/ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="images/tickers/ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="images/tickers/ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="images/tickers/ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="images/tickers/ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="images/tickers/ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="images/tickers/ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="images/tickers/ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="images/tickers/ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="images/tickers/ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:14px"><img src="images/tickers/ticker-surmount.svg" alt="Surmount" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-manulife.svg" alt="Manulife" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:26px"><img src="images/tickers/ticker-relay.svg" alt="Relay" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:17px"><img src="images/tickers/ticker-rogers.svg" alt="Rogers" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:22px"><img src="images/tickers/ticker-tiktok.svg" alt="TikTok" class="ticker-logo" loading="lazy" /></div>
+          <div class="ticker-logo-wrap" style="height:21px"><img src="images/tickers/ticker-fiix.svg" alt="Fiix" class="ticker-logo" loading="lazy" /></div>
         </div>
       </div>
     </div>
@@ -1329,43 +1406,43 @@
     <div style="width:1px;height:34px;background:rgba(0,0,0,0.12);flex-shrink:0;align-self:center;margin:0 4px;"></div>
     <!-- Figma -->
     <div class="tool-chip" style="background:rgba(10,207,131,0.1);" title="Figma">
-      <img src="tool-figma.svg" alt="Figma" style="width:16px;height:24px;" loading="lazy" />
+      <img src="images/tools/tool-figma.svg" alt="Figma" style="width:16px;height:24px;" loading="lazy" />
     </div>
     <!-- ChatGPT -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.05);" title="ChatGPT">
-      <img src="tool-chatgpt.svg" loading="lazy" alt="ChatGPT" style="width:24px;height:24px;" />
+      <img src="images/tools/tool-chatgpt.svg" loading="lazy" alt="ChatGPT" style="width:24px;height:24px;" />
     </div>
     <!-- Claude -->
     <div class="tool-chip" style="background:rgba(217,119,87,0.1);width:auto;padding:0 16px;" title="Claude">
-      <img src="tool-claude.svg" loading="lazy" alt="Claude" style="width:93px;height:20px;" />
+      <img src="images/tools/tool-claude.svg" loading="lazy" alt="Claude" style="width:93px;height:20px;" />
     </div>
     <!-- Next.js -->
     <div class="tool-chip" style="background:rgba(16,16,16,0.1);" title="Next.js">
-      <img src="tool-nextjs.svg" loading="lazy" alt="Next.js" style="width:25px;height:25px;" />
+      <img src="images/tools/tool-nextjs.svg" loading="lazy" alt="Next.js" style="width:25px;height:25px;" />
     </div>
     <!-- Cursor -->
     <div class="tool-chip" style="background:rgba(114,113,109,0.1);width:auto;padding:0 17px;" title="Cursor">
-      <img src="tool-cursor-logo.svg" loading="lazy" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
+      <img src="images/tools/tool-cursor-logo.svg" loading="lazy" alt="Cursor" style="width:84px;height:20px;flex-shrink:0;" />
     </div>
     <!-- Framer -->
     <div class="tool-chip" style="background:rgba(17,79,249,0.1);" title="Framer">
-      <img src="tool-framer.svg" loading="lazy" alt="Framer" style="width:29px;height:28px;" />
+      <img src="images/tools/tool-framer.svg" loading="lazy" alt="Framer" style="width:29px;height:28px;" />
     </div>
     <!-- Notion -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);" title="Notion">
-      <img src="tool-notion.svg" loading="lazy" alt="Notion" style="width:24px;height:25px;" />
+      <img src="images/tools/tool-notion.svg" loading="lazy" alt="Notion" style="width:24px;height:25px;" />
     </div>
     <!-- Vercel -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 16px;" title="Vercel">
-      <img src="tool-vercel.svg" loading="lazy" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
+      <img src="images/tools/tool-vercel.svg" loading="lazy" alt="Vercel" style="width:70px;height:14px;flex-shrink:0;" />
     </div>
     <!-- Codex -->
     <div class="tool-chip" style="background:rgba(138,160,255,0.1);" title="Codex">
-      <img src="tool-codex.svg" loading="lazy" alt="Codex" style="width:24px;height:24px;" />
+      <img src="images/tools/tool-codex.svg" loading="lazy" alt="Codex" style="width:24px;height:24px;" />
     </div>
     <!-- GitHub -->
     <div class="tool-chip" style="background:rgba(0,0,0,0.06);width:auto;padding:0 16px;" title="GitHub">
-      <img src="tool-github.svg" loading="lazy" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
+      <img src="images/tools/tool-github.svg" loading="lazy" alt="GitHub" style="width:70px;height:20px;flex-shrink:0;" />
     </div>
     <!-- Filler -->
     <div style="flex:1 0 0;height:62px;border-radius:16px;border:0.8px solid rgba(0,0,0,0.06);box-shadow:0 2px 8px rgba(10,13,18,0.03);background:linear-gradient(90deg,rgba(177,224,245,0.36) 0%,rgba(204,205,233,0.36) 22.6%,rgba(231,185,221,0.36) 47.7%,rgba(231,208,196,0.36) 72.6%,rgba(231,219,184,0.36) 100%);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;padding:0 16px;">
@@ -1376,7 +1453,7 @@
   <!-- ── Video CTA ───────────────────────────────────────── -->
   <section id="video-cta">
     <div class="video-cta-card">
-      <video src="kling-hero.mp4" autoplay muted loop playsinline></video>
+      <video src="media/kling-hero.mp4" autoplay muted loop playsinline></video>
       <div class="video-cta-gradient"></div>
       <div class="video-cta-hint">
         <div class="sp-arrow-wrap">
@@ -1433,56 +1510,56 @@
       <div class="proj-card proj-img rf2-scene-outer">
         <div class="rf-scene2">
           <div class="rf2-item" style="position:absolute;width:1234.866px;height:1251.296px;left:-383px;top:-9px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(6.56deg);"><img src="rf2/img35.png" style="width:1112.906px;height:1131.592px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(6.56deg);"><img src="images/relayfi/rf2/img35.png" style="width:1112.906px;height:1131.592px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:846.747px;height:945.098px;left:-522px;top:-556px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(48.63deg);"><img src="rf2/img36.png" style="width:1183.36px;height:86.219px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(48.63deg);"><img src="images/relayfi/rf2/img36.png" style="width:1183.36px;height:86.219px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:320.069px;height:237.247px;left:347px;top:884px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(-3.56deg);"><img src="rf2/img21.png" style="width:307.102px;height:218.623px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(-3.56deg);"><img src="images/relayfi/rf2/img21.png" style="width:307.102px;height:218.623px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:149px;height:155px;left:549px;top:205px;">
-            <img src="rf2/img34.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+            <img src="images/relayfi/rf2/img34.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
           </div>
           <div class="rf2-item" style="position:absolute;width:321.018px;height:212.627px;left:293.05px;top:524.31px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(87.89deg);"><img src="rf2/img33.png" style="width:201.22px;height:313.829px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(87.89deg);"><img src="images/relayfi/rf2/img33.png" style="width:201.22px;height:313.829px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:912.178px;height:1246.078px;left:1003.07px;top:-114.66px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(-7.47deg);"><img src="rf2/img30.png" style="width:768.451px;height:1156.009px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(-7.47deg);"><img src="images/relayfi/rf2/img30.png" style="width:768.451px;height:1156.009px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:1064.098px;height:1190.43px;left:1193.78px;top:331.77px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(16.13deg);"><img src="rf2/img26.png" style="width:817.756px;height:1002.75px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(16.13deg);"><img src="images/relayfi/rf2/img26.png" style="width:817.756px;height:1002.75px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:260px;height:308px;left:0;top:862px;">
-            <img src="rf2/img31.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+            <img src="images/relayfi/rf2/img31.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
           </div>
           <div class="rf2-item" style="position:absolute;width:289px;height:186px;left:1581px;top:224px;">
-            <img src="rf2/img28.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+            <img src="images/relayfi/rf2/img28.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
           </div>
           <div class="rf2-item" style="position:absolute;width:324.911px;height:229.11px;left:1256px;top:609px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(3.38deg);"><img src="rf2/img20.png" style="width:313px;height:211px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(3.38deg);"><img src="images/relayfi/rf2/img20.png" style="width:313px;height:211px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:429.66px;height:577.89px;left:1365px;top:899px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(12.32deg);"><img src="rf2/img29.png" style="width:326.125px;height:520.269px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(12.32deg);"><img src="images/relayfi/rf2/img29.png" style="width:326.125px;height:520.269px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:536.814px;height:646.086px;left:-240px;top:265px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(31.31deg);"><img src="rf2/img23.png" style="width:267.208px;height:593.687px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(31.31deg);"><img src="images/relayfi/rf2/img23.png" style="width:267.208px;height:593.687px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:179.163px;height:191.904px;left:1183px;top:109px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(34.18deg);"><img src="rf2/img32.png" style="width:109.573px;height:157.561px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(34.18deg);"><img src="images/relayfi/rf2/img32.png" style="width:109.573px;height:157.561px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <!-- loyalty card: between binder clip (top:109) and Relay card (top:609) -->
           <div class="rf2-item" style="position:absolute;width:360px;height:230px;left:1070px;top:330px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(-5deg);"><img src="rf2/img-loyalty.png" style="width:320px;height:202px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(-5deg);"><img src="images/relayfi/rf2/img-loyalty.png" style="width:320px;height:202px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:240px;height:260px;left:1016px;top:743px;">
-            <img src="rf2/img22.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
+            <img src="images/relayfi/rf2/img22.png" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" />
           </div>
           <div class="rf2-item" style="position:absolute;width:338.319px;height:317.892px;left:1690px;top:531px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(18.17deg);"><img src="rf2/img27.png" style="width:276px;height:244px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(18.17deg);"><img src="images/relayfi/rf2/img27.png" style="width:276px;height:244px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
           <div class="rf2-item" style="position:absolute;width:554.417px;height:359.596px;left:227px;top:-95px;display:flex;align-items:center;justify-content:center;">
-            <div style="flex:none;transform:rotate(-21.67deg);"><img src="rf2/img38.png" style="width:525.847px;height:178.014px;object-fit:cover;display:block;" loading="lazy" /></div>
+            <div style="flex:none;transform:rotate(-21.67deg);"><img src="images/relayfi/rf2/img38.png" style="width:525.847px;height:178.014px;object-fit:cover;display:block;" loading="lazy" /></div>
           </div>
         </div>
       </div>
@@ -1492,7 +1569,7 @@
           <!-- Left: Main Content (1166px) -->
           <div class="rf-main">
             <div class="rf-chart-wrap">
-              <img src="relayfi-img1.png" style="width:1166px;height:auto;display:block;" loading="lazy" decoding="async" />
+              <img src="images/relayfi/relayfi-img1.png" style="width:1166px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
             <div class="rf-sankey">
               <!-- Transfers from -->
@@ -1506,10 +1583,10 @@
               <div style="background:#6E82ED;height:8px;width:613px;margin-top:0;flex-shrink:0;"></div>
               <!-- Sankey flow -->
               <div style="width:985px;height:161px;position:relative;overflow:hidden;flex-shrink:0;">
-                <div style="position:absolute;width:476px;height:262px;left:16px;top:-49px;"><img src="relayfi-flow1.svg" style="width:100%;height:100%;display:block;" /></div>
-                <div style="position:absolute;width:241px;height:260px;left:438px;top:-51px;"><img src="relayfi-flow2.svg" style="width:100%;height:100%;display:block;" /></div>
-                <div style="position:absolute;width:146px;height:261px;left:679px;top:-48px;"><img src="relayfi-flow3.svg" style="width:100%;height:100%;display:block;" /></div>
-                <div style="position:absolute;width:199px;height:252px;left:770px;top:-45px;"><img src="relayfi-flow4.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:476px;height:262px;left:16px;top:-49px;"><img src="images/relayfi/relayfi-flow1.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:241px;height:260px;left:438px;top:-51px;"><img src="images/relayfi/relayfi-flow2.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:146px;height:261px;left:679px;top:-48px;"><img src="images/relayfi/relayfi-flow3.svg" style="width:100%;height:100%;display:block;" /></div>
+                <div style="position:absolute;width:199px;height:252px;left:770px;top:-45px;"><img src="images/relayfi/relayfi-flow4.svg" style="width:100%;height:100%;display:block;" /></div>
                 <p style="position:absolute;left:170px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">50%</p>
                 <p style="position:absolute;left:525px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">30%</p>
                 <p style="position:absolute;left:761px;top:133px;font-size:16px;color:#25201F;font-weight:500;line-height:1;">15%</p>
@@ -1542,7 +1619,7 @@
             <div class="rf-banner">
               <div style="background:#407659;width:7px;flex-shrink:0;"></div>
               <div style="flex:1;padding:24px 24px 24px 20px;display:flex;gap:16px;align-items:center;background:#FFFEF7;box-shadow:0 4px 16px rgba(207,201,156,0.15);">
-                <img src="relayfi-icon.svg" style="width:32px;height:32px;flex-shrink:0;" />
+                <img src="images/relayfi/relayfi-icon.svg" style="width:32px;height:32px;flex-shrink:0;" />
                 <div style="flex:1;">
                   <p style="font-weight:700;font-size:16px;color:#25201F;line-height:1.3;margin-bottom:4px;">Your August 2023 cash flow report is ready</p>
                   <p style="font-size:16px;color:#504B4A;line-height:1.3;">See how company income and expenses are trending by clients and vendors, and get a view of cash flow across your business.</p>
@@ -1554,11 +1631,11 @@
             </div>
             <!-- Cash flow graph -->
             <div class="rf-graph-wrap">
-              <img src="relayfi-graph.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
+              <img src="images/relayfi/relayfi-graph.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
             <!-- Transactions table -->
             <div class="rf-tx-wrap">
-              <img src="relayfi-transactions.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
+              <img src="images/relayfi/relayfi-transactions.png" style="width:813px;height:auto;display:block;" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
@@ -1764,6 +1841,39 @@
     <div class="cell span-all">
       <h1>I consider myself incredibly lucky to have shipped products people actually use. I'd love to work on your hardest design problems.</h1>
     </div>
+  </section>
+
+  <!-- ── Globe ──────────────────────────────────────────── -->
+  <section id="globe-section">
+    <div id="globe-wrap">
+      <canvas id="globe-canvas"></canvas>
+
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-nyc;opacity:var(--cobe-visible-p-nyc,0);filter:blur(calc((1 - var(--cobe-visible-p-nyc,0)) * 5px));--p-rot:4deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#8ea8c8 0%,#b4c8e0 50%,#6a8aac 100%)"></div>
+        <span class="globe-polaroid-caption">New York</span>
+      </div>
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-pisa;opacity:var(--cobe-visible-p-pisa,0);filter:blur(calc((1 - var(--cobe-visible-p-pisa,0)) * 5px));--p-rot:-6deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#c2a882 0%,#dcc4a0 50%,#a08460 100%)"></div>
+        <span class="globe-polaroid-caption">Pisa</span>
+      </div>
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-egypt;opacity:var(--cobe-visible-p-egypt,0);filter:blur(calc((1 - var(--cobe-visible-p-egypt,0)) * 5px));--p-rot:3deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#d4aa50 0%,#eacc78 50%,#b08830 100%)"></div>
+        <span class="globe-polaroid-caption">Egypt</span>
+      </div>
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-sg;opacity:var(--cobe-visible-p-sg,0);filter:blur(calc((1 - var(--cobe-visible-p-sg,0)) * 5px));--p-rot:5deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#68ae90 0%,#8ccaae 50%,#4a9070 100%)"></div>
+        <span class="globe-polaroid-caption">Singapore</span>
+      </div>
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-tokyo;opacity:var(--cobe-visible-p-tokyo,0);filter:blur(calc((1 - var(--cobe-visible-p-tokyo,0)) * 5px));--p-rot:-3deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#e08c8a 0%,#f4b0ae 50%,#c06a68 100%)"></div>
+        <span class="globe-polaroid-caption">Tokyo</span>
+      </div>
+      <div class="globe-polaroid" style="position-anchor:--cobe-p-sf;opacity:var(--cobe-visible-p-sf,0);filter:blur(calc((1 - var(--cobe-visible-p-sf,0)) * 5px));--p-rot:-5deg">
+        <div class="globe-polaroid-photo" style="background:linear-gradient(135deg,#c4a06e 0%,#dcc092 50%,#a07848 100%)"></div>
+        <span class="globe-polaroid-caption">San Francisco</span>
+      </div>
+    </div>
+    <p id="globe-label">43.7°N 79.4°W — Toronto, Canada</p>
   </section>
 
   <!-- ── Footer ─────────────────────────────────────────── -->
@@ -2384,6 +2494,100 @@
   })();
 </script>
 
+
+<script type="module">
+  import createGlobe from 'https://esm.sh/cobe@2.0.1';
+
+  const canvas = document.getElementById('globe-canvas');
+  const wrap   = document.getElementById('globe-wrap');
+  const dpr    = Math.min(window.devicePixelRatio || 1, 2);
+  const size   = wrap.offsetWidth || 520;
+
+  const markers = [
+    { id: 'p-nyc',   location: [40.71,  -74.01], size: 0.03 },
+    { id: 'p-pisa',  location: [43.72,   10.40], size: 0.03 },
+    { id: 'p-egypt', location: [29.98,   31.13], size: 0.03 },
+    { id: 'p-sg',    location: [ 1.35,  103.82], size: 0.03 },
+    { id: 'p-tokyo', location: [35.68,  139.65], size: 0.03 },
+    { id: 'p-sf',    location: [37.78, -122.44], size: 0.03 },
+  ];
+
+  // rendered values (smoothed)
+  let phi   = 0, theta   = 0.2;
+  // target values (updated instantly on drag/momentum)
+  let tPhi  = 0, tTheta  = 0.2;
+  let isDragging = false;
+  let dragLastX  = 0, dragLastY = 0;
+  let velX = 0, velY = 0;
+
+  const globe = createGlobe(canvas, {
+    devicePixelRatio: dpr,
+    width:  size * dpr,
+    height: size * dpr,
+    phi: 0,
+    theta: 0.2,
+    dark: 0,
+    diffuse: 1.5,
+    mapSamples: 16000,
+    mapBrightness: 9,
+    baseColor:     [1, 1, 1],
+    markerColor:   [0.4, 0.6, 0.9],
+    glowColor:     [0.94, 0.93, 0.91],
+    markerElevation: 0,
+    markers,
+  });
+
+  // ── Drag to rotate ──────────────────────────────────────────
+  wrap.addEventListener('pointerdown', e => {
+    isDragging = true;
+    dragLastX  = e.clientX;
+    dragLastY  = e.clientY;
+    velX = velY = 0;
+    wrap.setPointerCapture(e.pointerId);
+    wrap.classList.add('globe-dragging');
+  });
+
+  wrap.addEventListener('pointermove', e => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragLastX;
+    const dy = e.clientY - dragLastY;
+    tPhi    += dx * 0.007;
+    tTheta  += dy * 0.003;   // less sensitive vertically
+    tTheta   = Math.max(-0.5, Math.min(0.5, tTheta));
+    velX     = dx * 0.007;
+    velY     = dy * 0.003;
+    dragLastX = e.clientX;
+    dragLastY = e.clientY;
+  });
+
+  ['pointerup', 'pointercancel'].forEach(type =>
+    wrap.addEventListener(type, () => {
+      isDragging = false;
+      wrap.classList.remove('globe-dragging');
+    })
+  );
+
+  // ── Render loop ─────────────────────────────────────────────
+  (function tick() {
+    if (!isDragging) {
+      if (Math.abs(velX) > 0.0003 || Math.abs(velY) > 0.0003) {
+        tPhi   += velX;
+        tTheta += velY;
+        tTheta  = Math.max(-0.5, Math.min(0.5, tTheta));
+        velX   *= 0.92;
+        velY   *= 0.92;
+      } else {
+        velX = velY = 0;
+        tPhi += 0.003;   // resume auto-spin
+      }
+    }
+    // Smooth lerp: rendered values ease toward targets
+    phi   += (tPhi   - phi)   * 0.07;
+    theta += (tTheta - theta) * 0.05;
+    globe.update({ phi, theta, markers });
+    requestAnimationFrame(tick);
+  })();
+</script>
 
 <script src="https://unpkg.com/lenis@latest/dist/lenis.min.js"></script>
 <script>
